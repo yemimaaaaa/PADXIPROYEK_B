@@ -24,7 +24,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'john_doe.jpg', 
-                    'id_level_member' => 1001
+                    'id_level_member' => 1001,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3002, 
@@ -33,7 +36,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'jane_smith.jpg', 
-                    'id_level_member' => 1002
+                    'id_level_member' => 1002,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3003, 
@@ -42,7 +48,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'michael_brown.jpg', 
-                    'id_level_member' => 1003
+                    'id_level_member' => 1003,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3004, 
@@ -51,7 +60,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'emily_davis.jpg', 
-                    'id_level_member' => 1001
+                    'id_level_member' => 1001,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3005, 
@@ -60,7 +72,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'sarah_wilson.jpg', 
-                    'id_level_member' => 1002
+                    'id_level_member' => 1002,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3006, 
@@ -69,7 +84,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'david_lee.jpg', 
-                    'id_level_member' => 1001
+                    'id_level_member' => 1001,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3007, 
@@ -78,7 +96,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(2), 
                     'periode_akhir' => Carbon::now()->addMonths(5), 
                     'foto' => 'zhou_guanyu.jpg', 
-                    'id_level_member' => 1003
+                    'id_level_member' => 1003,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3008, 
@@ -87,7 +108,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'fernando_alonso.jpg', 
-                    'id_level_member' => 1001
+                    'id_level_member' => 1001,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3009, 
@@ -96,7 +120,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(6), 
                     'periode_akhir' => now(), 
                     'foto' => 'lando_norris.jpg', 
-                    'id_level_member' => 1002
+                    'id_level_member' => 1002,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ],
                 [
                     'id_member' => 3010, 
@@ -105,7 +132,10 @@ class MemberSeeder extends Seeder
                     'periode_awal' => Carbon::now()->subMonths(2), 
                     'periode_akhir' => Carbon::now()->addMonths(5), 
                     'foto' => 'max_delose.jpg', 
-                    'id_level_member' => 1003
+                    'id_level_member' => 1003,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'deleted_at' => null,
                 ]
             ]);
         }

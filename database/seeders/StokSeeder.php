@@ -22,6 +22,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'kopi_arabika.jpg',
             'detail_stok' => 'Biji kopi Arabika premium.',
             'id_pegawai' => 4001,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7002',
@@ -31,6 +34,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'kopi_robusta.jpg',
             'detail_stok' => 'Biji kopi Robusta dengan rasa kuat.',
             'id_pegawai' => 4001,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7003',
@@ -40,6 +46,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'susu_uht.jpg',
             'detail_stok' => 'Susu UHT untuk campuran kopi.',
             'id_pegawai' => 4001,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7004',
@@ -49,6 +58,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'gula_pasir.jpg',
             'detail_stok' => 'Gula pasir untuk manisnya kopi.',
             'id_pegawai' => 4001,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7005',
@@ -58,6 +70,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'cangkir_keramik.jpg',
             'detail_stok' => 'Cangkir keramik untuk penyajian kopi.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7006',
@@ -67,6 +82,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'syrup_vanilla.jpg',
             'detail_stok' => 'Syrup vanilla untuk varian kopi.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7007',
@@ -76,6 +94,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'kopi_decaf.jpg',
             'detail_stok' => 'Kopi tanpa kafein untuk yang sensitif.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7008',
@@ -85,6 +106,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'kue_brownies.jpg',
             'detail_stok' => 'Brownies lezat untuk teman kopi.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7009',
@@ -94,6 +118,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'cokelat_bubuk.jpg',
             'detail_stok' => 'Cokelat bubuk untuk mocha.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
         [
             'id_stok' => '7010',
@@ -103,6 +130,9 @@ class StokSeeder extends Seeder
             'foto_stok' => 'air_mineral.jpg',
             'detail_stok' => 'Air mineral untuk penyajian.',
             'id_pegawai' => 4010,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ],
     ]);
 }

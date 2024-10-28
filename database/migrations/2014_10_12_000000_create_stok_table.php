@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pegawai'); 
             $table->foreign('id_pegawai')->references('id_pegawai')->on('pegawai')->onDelete('cascade');
             $table->timestamps();
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**

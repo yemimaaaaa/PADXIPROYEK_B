@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_level_member'); 
             $table->foreign('id_level_member')->references('id_level_member')->on('levelmember')->onDelete('cascade');
             $table->timestamps();
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**

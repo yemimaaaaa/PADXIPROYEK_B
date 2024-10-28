@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(ProdukSeeder::Class);
         $this->call(StokSeeder::Class);
         $this->call(TransaksiPenjualanSeeder::Class);
+        $this->call(DetailTransaksiSeeder::Class);
+        $this->call(PoinSeeder::Class);
 
         // \App\Models\User::factory(10)->create();
 

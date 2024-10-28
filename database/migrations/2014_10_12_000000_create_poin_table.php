@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamp('tanggal');
             $table->integer('total_poin');
             $table->unsignedBigInteger('kode_transaksi'); 
-            $table->foreign('kode_transaksi')->references('kode_transaksi')->on('kode_transaksi')->onDelete('cascade');
+            $table->foreign('kode_transaksi')->references('kode_transaksi')->on('transaksipenjualan')->onDelete('cascade');
             $table->unsignedBigInteger('id_member'); 
             $table->foreign('id_member')->references('id_member')->on('member')->onDelete('cascade');
             $table->timestamps('updated_at');

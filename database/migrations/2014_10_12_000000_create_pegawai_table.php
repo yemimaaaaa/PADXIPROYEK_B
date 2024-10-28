@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_role'); 
             $table->foreign('id_role')->references('id_role')->on('role')->onDelete('cascade');
             $table->timestamps();
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**

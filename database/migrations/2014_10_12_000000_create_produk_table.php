@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('deskripsi_produk')->nullable(); // Deskripsi produk
             $table->string('foto_produk')->nullable(); // Path foto produk
             $table->timestamps(); // Tanggal created_at dan updated_at
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**

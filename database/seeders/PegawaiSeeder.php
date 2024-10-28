@@ -29,7 +29,10 @@ class PegawaiSeeder extends Seeder
                 'foto' => 'alice.jpg',
                 'no_hp' => '081234567800',
                 'email' => 'alice@example.com',
-                'id_role' => in_array(10101, $validRoles) ? '10101' : null // Validasi role
+                'id_role' => in_array(10101, $validRoles) ? '10101' : null, // Validasi role
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
             ],
             [
                 'id_pegawai' => 4010,
@@ -39,7 +42,10 @@ class PegawaiSeeder extends Seeder
                 'foto' => 'jack.jpg',
                 'no_hp' => '081234567809',
                 'email' => 'jack@example.com',
-                'id_role' => in_array(10102, $validRoles) ? '10102' : null // Validasi role
+                'id_role' => in_array(10102, $validRoles) ? '10102' : null, // Validasi role
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
             ]
         ]);
     }

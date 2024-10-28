@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_role');
             $table->string('nama_role')->unique();
             $table->timestamps();
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**

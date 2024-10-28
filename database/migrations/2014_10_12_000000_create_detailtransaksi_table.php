@@ -13,22 +13,14 @@ return new class extends Migration
     {
         Schema::create('detailtransaksi', function (Blueprint $table) {
             $table->integer('id_detail_transaksi')->primary()->autoincrement();
-            $table->integer('kode_transaksi')->unsigned()->notNull();
-            $table->integer('id_produk')->unsigned()->notNull();
             $table->datetime('tanggal_penjualan')->notNull();
             $table->integer('jumlah')->notNull();
             $table->float('subtotal')->notNull();
+            $table->unsignedBigInteger('kode_transaksi'); 
+            $table->foreign('kode_transaksi')->references('kode_transaksi')->on('transaksipenjualan')->onDelete('cascade');
+            $table->unsignedBigInteger('id_produk'); 
+            $table->foreign('id_produk')->references('id_produk')->on('produk')->onDelete('cascade');
             $table->timestamps();
-        
-            $table->foreign('kode_transaksi')
-                  ->references('kode_transaksi')
-                  ->on('transaksipenjualan')
-                  ->onDelete('cascade'); // Specify the action here (e.g., cascade)
-        
-            $table->foreign('id_produk')
-                  ->references('id_produk')
-                  ->on('produk')
-                  ->onDelete('cascade'); // Specify the action here (e.g., cascade)
         });
     }
     /**

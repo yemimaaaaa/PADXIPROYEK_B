@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_member'); 
             $table->foreign('id_member')->references('id_member')->on('member')->onDelete('cascade');         
             $table->timestamps();
-            $table->timestamp('deleted_at')->useCurrent();
+            $table->softDeletes();
         });
     }
     /**
