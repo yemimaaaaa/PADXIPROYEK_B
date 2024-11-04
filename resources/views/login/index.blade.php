@@ -54,6 +54,12 @@
         <div class="text-center mb-4">
             <h3 class="fw-bold">Hi, Welcome Back</h3>
         </div>
+        {{-- @if(Session::has('error'))
+            <div class="alert alert-danger" role="alert" style="text-align: center">
+                {{ Session::get('error') }}
+            </div>
+        @endif <!-- Tambahkan @endif di sini untuk menutup kondisi --> --}}
+
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="mb-3">
@@ -63,7 +69,7 @@
                     <div class="invalid-feedback">Email tidak terdaftar</div>
                 @enderror
             </div>
-            <div class="mb-3">
+            <div class="mb-3"> 
                 <label for="password" class="form-label">Password</label>
                 <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
                 @error('password')
@@ -77,7 +83,6 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-white w-100">Log In</button>
-
         </form>
     </div>
 </div>

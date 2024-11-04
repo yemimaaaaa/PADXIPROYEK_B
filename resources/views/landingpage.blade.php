@@ -39,7 +39,7 @@
   <header class="bg-white-900 shadow-md">
    <div class="container mx-auto flex justify-between items-center py-4 px-6">
    <div class="flex items-start ">
-    <img alt="Member icon" class="w-32 h-30 rounded-full" height="100" src="/logobasado1ktmr.png" width="150" />
+    <img alt="Member icon" class="w-32 h-30" height="100" src="/logobasado1ktmr.png" width="150" />
     <!-- <span class="text-white text-lg">
         Cek Member
     </span> -->
@@ -62,14 +62,15 @@
      </a>
     </nav> -->
     <div class="flex items-center space-x-2 border border-white p-2 rounded">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
-      <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-      <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-       </svg>
-        <span class="text-black text-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+    </svg>
+    <a href="{{ route('showprofile') }}" class="text-black text-lg">
         Cek Member
-        </span>
-    </div>
+    </a>
+</div>
+
   </header>
   <!-- Hero Section -->
   <section class="bg-gray-100 py-20">
@@ -170,7 +171,7 @@
         Minuman kopi yang sangat populer, terutama bagi mereka yang menyukai perpaduan rasa manis, pahit, dan creamy. Caramel Macchiato terlihat sangat menarik dengan lapisan-lapisan yang berbeda.
       </p>
       <p class="text-xl font-bold mb-4">
-       Rp32000,00
+       Rp32.000,00
       </p>
       <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
        Order Now
@@ -185,7 +186,7 @@
       Latte dikenal dengan rasanya yang lembut dan creamy, serta lapisan busa tipis di bagian atasnya yang sering digunakan untuk membuat latte art.
       </p>
       <p class="text-xl font-bold mb-4">
-       Rp 25000,00
+       Rp 25.000,00
       </p>
       <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
        Order Now
@@ -200,7 +201,7 @@
       Minuman ini memiliki rasa yang lebih ringan dibandingkan espresso murni, sehingga cocok bagi mereka yang tidak terlalu suka dengan rasa pahit yang kuat.
       </p>
       <p class="text-xl font-bold mb-4">
-       Rp 20000,00
+       Rp 20.000,00
       </p>
       <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
        Order Now
@@ -248,7 +249,7 @@
                Cinnamon roll atau roti gulung kayu manis adalah jenis pastry manis yang sangat populer. Roti ini dikenal karena aroma kayu manis yang khas dan rasa manisnya yang lezat.
             </p>
             <p class="text-xl font-bold mb-4">
-               Rp 35000,00
+               Rp 35.000,00
             </p>
             <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
                Order Now
@@ -263,7 +264,7 @@
                Kue kering yang berasal dari Prancis, bentuknya yang khas menyerupai bulan sabit, itulah sebabnya dinamakan Croissant. Kue ini sangat populer karena teksturnya yang renyah dan berlapis-lapis, serta rasanya yang gurih dan sedikit manis.
             </p>
             <p class="text-xl font-bold mb-4">
-               Rp 15000,00
+               Rp 15.000,00
             </p>
             <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
                Order Now
@@ -278,7 +279,7 @@
                Kue yang memiliki rasa manis dan lembut, dengan bahan utama keju. Teksturnya yang lembut dan creamy, serta rasa keju yang gurih, membuat cheesecake menjadi salah satu dessert yang paling digemari di dunia.
             </p>
             <p class="text-xl font-bold mb-4">
-               Rp 35000,00
+               Rp 35.000,00
             </p>
             <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
                Order Now

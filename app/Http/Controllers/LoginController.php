@@ -9,26 +9,28 @@ class LoginController extends Controller
     {
         return view('login.index', [
             'title' => 'Login',
-            'active' => 'login'
+            'active' => 'login',
+            'pegawai' => 'pegawai'
         ]); 
     }
 
     public function authenticate(Request $request)
-{
-    $credentials = $request->validate([ 
-        'username' => 'required', 
-        'password' => 'required'
-    ]);
-
-    if (Auth::attempt($credentials)){
-        $request->session()->regenerate(); // Regenerate session untuk mencegah session fixation
-        return redirect()->intended('/dashboard'); // Redirect ke dashboard
-    }
-
-    return back()->withErrors([
-        'username' => 'Username atau Password Salah.',
-    ])->onlyInput('username');
-}
+    {
+        $credentials = $request->validate([ 
+            'email' => 'required|email', 
+            'password' => 'required'
+        ]);
+    
+        if (Auth::attempt($credentials))
+        {
+            $request->session()->regenerate(); // Regenerate session for security
+            return redirect()->intended('/dashboard'); // Redirect to dashboard
+        }
+    
+        return back()->withErrors([
+            'email' => 'Email or Password is incorrect.',
+        ])->onlyInput('email');
+    }    
 
     public function logout(Request $request)
     {
@@ -36,6 +38,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect ('/login');
+        return redirect()->route('login')->with('success','Anda telah');
     }
 }

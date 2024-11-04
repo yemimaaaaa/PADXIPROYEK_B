@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Pegawai extends Model
+class Pegawai extends Model implements AuthenticatableContract
 {
-    use SoftDeletes;
+    use Authenticatable, SoftDeletes;
 
     // Tentukan nama tabel jika tidak mengikuti konvensi Laravel
     protected $table = 'pegawai';
@@ -22,7 +24,7 @@ class Pegawai extends Model
         'password',
         'nohp_pegawai',
         'email_pegawai',
-        'id_role' // Menambahkan id_levelmember jika akan digunakan dalam relasi
+        'id_role'
     ];
 
     // Tentukan jika ada kolom soft delete
@@ -31,13 +33,19 @@ class Pegawai extends Model
     // Menyediakan timestamps secara otomatis
     public $timestamps = true;
 
-    // Relasi ke LevelMember
-    public function role()
+    public function isPegawai()
     {
-        return $this->belongsTo(Role::class, 'id_role'); // Relasi ke LevelMember
+        return $this->role === 'pegawai';
     }
 
-    // Relasi ke Member lain jika ada (jika Member memiliki relasi dengan Member lain, misal sebagai grup)
-    // Jika ini adalah relasi yang valid, namanya harus berbeda
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
 
+    // Relasi ke Role
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
+    }
 }
