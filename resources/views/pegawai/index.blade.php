@@ -4,43 +4,43 @@
 
 @section('content')
     <style>
-        /* Gaya untuk memastikan gambar tidak melebar */
+        /* Pastikan gambar tidak melebar */
         .table img {
-            width: 100px;               /* Tentukan lebar tetap untuk gambar */
-            height: 100px;              /* Tentukan tinggi tetap untuk gambar */
-            object-fit: cover;          /* Menjaga proporsi gambar tanpa merusak tampilannya */
-            border-radius: 8px;         /* Membuat sudut gambar menjadi bulat */
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
         }
-        
-        /* Tambahan untuk aksi tombol agar terlihat rapi */
+
+        /* Pastikan tombol aksi memiliki padding dan margin yang sesuai */
         .action-icons .btn {
-            padding: 0; /* Hilangkan padding tombol agar tidak terlalu besar */
+            padding: 0;
             margin-right: 5px;
         }
     </style>
     <body>
         <div class="container mt-2">
             <h2>Data Pegawai</h2>
-                            <!-- Dropdown positioned at the top-right corner -->
-                            <div class="dropdown user-dropdown mt-4 pb-4">
-                                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <!-- Display Pegawai photo if available, otherwise use a default image -->
-                                    <img src="{{ auth()->user()->pegawai && auth()->user()->pegawai->foto ? asset('/pegawaii.jpg' . auth()->user()->pegawai->foto) : asset('pegawaibisayok.jpeg') }}" 
-                                        alt="Pegawai" width="30" height="30" class="rounded-square">
-                                    <!-- Display Pegawai name if available, otherwise show 'Guest' -->
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-left">
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item text-white bg-transparent border-0 d-flex align-items-center">
-                                                <i class="bi bi-box-arrow-right"></i>
-                                                <span class="ms-2">Logout</span>
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+            
+            <!-- Dropdown untuk akun di pojok kanan atas -->
+            <div class="d-flex justify-content-end align-items-center mb-3">
+                <div class="dropdown border rounded shadow p-2 bg-light">
+                    <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="Pegawai" width="30" height="30" class="rounded-circle me-2">
+                        <span class="d-none d-sm-inline mx-1">({{ auth()->check() ? auth()->user()->nama : 'Guest' }})</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-dark">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Form pencarian dan tombol tambah pegawai -->
             <div class="row align-items-center mb-3">
                 <div class="col text-start">
                     <form class="d-flex" action="/pegawai/search" method="GET" style="justify-content: flex-start;">
@@ -49,9 +49,11 @@
                     </form>
                 </div>
                 <div class="col text-end">
-                    <button type="button" class="btn btn-primary">Create Pegawai</button>
+                    <a href="/pegawai/create" class="btn btn-primary">Create Pegawai</a>
                 </div>
             </div>
+
+            <!-- Tabel Data Pegawai -->
             <table class="table table-striped">
                 <thead>
                     <tr>

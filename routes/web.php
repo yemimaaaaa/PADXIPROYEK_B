@@ -28,31 +28,23 @@ Route::get('/', function () {
 
 // Authentication routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
-Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/login', [LoginController::class, 'authenticate'])->middleware('guest');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+// Route to check member profile
+Route::get('/showprofile', [MemberController::class, 'showProfile'])->name('showprofile');
+
+// Group routes that require authentication
 Route::middleware('auth')->group(function () {
-    Route::middleware('role:pegawai')->group(function () {
-        Route::get('/pegawai', [MemberController::class, 'index'])->name('pegawai.index');
-        // Other routes for pegawai
-    });
-
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-        // Other routes for admin
-    });
-
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-});
-
-    // Route to check member profile
-    Route::get('/showprofile', [MemberController::class, 'showProfile'])->name('showprofile');
-
-    // Dashboard route
+    // Dashboard route (protected by auth middleware)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Product routes
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
     Route::get('/produk/search', [ProdukController::class, 'search'])->name('produk.search');
+    Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
+    Route::get('/produk/(id_produk)/update', [ProdukController::class, 'update'])->name('produk.update');
+    Route::get('/produk/(id_produk)/delete', [ProdukController::class, 'delete'])->name('produk.delete');
 
     // Member routes
     Route::get('/member', [MemberController::class, 'index'])->name('member.index');
@@ -74,3 +66,4 @@ Route::middleware('auth')->group(function () {
 
     // Report routes
     Route::get('/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporantransaksi.index');
+});

@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Models;
 
@@ -9,13 +9,9 @@ class Stok extends Model
 {
     use SoftDeletes;
 
-    // Tentukan nama tabel jika tidak mengikuti konvensi Laravel
-    protected $table = 'stok';
+    protected $table = 'stok'; // Nama tabel custom
+    protected $primaryKey = 'id_stok'; // Primary key custom
 
-    // Tentukan primary key tabel
-    protected $primaryKey = 'id_stok';
-
-    // Tentukan kolom yang bisa diisi (mass assignable)
     protected $fillable = [
         'nama_stok',
         'jenis_stok',              
@@ -25,15 +21,16 @@ class Stok extends Model
         'id_pegawai'
     ];
 
-    // Tentukan jika ada kolom soft delete
+    // Tidak perlu mendeklarasikan deleted_at sejak Laravel 8+
     protected $dates = ['deleted_at'];
 
-    // Menyediakan timestamps secara otomatis
-    public $timestamps = true;
+    public $timestamps = true; // Mengaktifkan timestamps
 
-    // Relasi ke Pegawai
+    /**
+     * Relasi ke tabel Pegawai
+     */
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class, 'id_pegawai'); // Relasi ke model Pegawai
+        return $this->belongsTo(Pegawai::class, 'id_pegawai');
     }
 }

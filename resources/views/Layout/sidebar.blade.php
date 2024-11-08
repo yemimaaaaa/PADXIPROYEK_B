@@ -95,17 +95,19 @@
                             </a>
                         </li>
                         <li>
-                            <a id="transaksipenjualan" href="{{ route('transaksipenjualan.index') }}" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <a id="transaksipenjualan" href="/transaksipenjualan" class="nav-link px-0 align-middle">
                                 <i class="bi bi-receipt"></i>
-                                <span class="ms-1 d-none d-sm-inline">Order</span>
+                                <span class="ms-1 d-none d-sm-inline">Transaksi Penjualan</span>
                             </a>
                         </li>
+                        @if (Auth::user()->role->nama_role !== "pegawai")
                         <li>
                             <a id="pegawai" href="{{ route('pegawai.index') }}" class="nav-link px-0 align-middle">
                                 <i class="bi bi-person-check"></i>
                                 <span class="ms-1 d-none d-sm-inline">Pegawai</span>
                             </a>                                   
                         </li>
+                        @endif
                         <li>
                             <a id="stok" href="{{ route('stok.index') }}" class="nav-link px-0 align-middle">
                                 <i class="bi bi-box-seam"></i>

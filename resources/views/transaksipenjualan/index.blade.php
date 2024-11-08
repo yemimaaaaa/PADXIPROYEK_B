@@ -7,26 +7,24 @@
 
         <div class="container mt-2">
             <h2>Data Transaksi Penjualan</h2>
-                            <!-- Dropdown positioned at the top-right corner -->
-                            <div class="dropdown user-dropdown mt-4 pb-4">
-                                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <!-- Display Pegawai photo if available, otherwise use a default image -->
-                                    <img src="{{ auth()->user()->pegawai && auth()->user()->pegawai->foto ? asset('/pegawaii.jpg' . auth()->user()->pegawai->foto) : asset('pegawaibisayok.jpeg') }}" 
-                                        alt="Pegawai" width="30" height="30" class="rounded-square">
-                                    <!-- Display Pegawai name if available, otherwise show 'Guest' -->
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-left">
-                                    <li>
-                                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item text-white bg-transparent border-0 d-flex align-items-center">
-                                                <i class="bi bi-box-arrow-right"></i>
-                                                <span class="ms-2">Logout</span>
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="dropdown border rounded shadow p-2 bg-light">
+                    <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://github.com/mdo.png" alt="Pegawai" width="30" height="30" class="rounded-circle me-2">
+                        <span class="d-none d-sm-inline mx-1">({{ auth()->check() ? auth()->user()->nama : 'Guest' }})</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        {{-- <li><a class="dropdown-item text-dark" href="/profile">Profile</a></li> --}}
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-dark">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
             <div class="row align-items-center mb-3">
             <div class="col text-start"> <!-- Aligns search to the left -->
             <form class="d-flex" action="/transaksipenjualan/search" method="GET" style="justify-content: flex-start;">

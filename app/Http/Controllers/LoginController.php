@@ -10,7 +10,6 @@ class LoginController extends Controller
         return view('login.index', [
             'title' => 'Login',
             'active' => 'login',
-            'pegawai' => 'pegawai'
         ]); 
     }
 

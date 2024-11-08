@@ -42,7 +42,7 @@ class RoleMiddleware
             'AdminKasir' => [
                 'allowed_routes' => [
                     'dashboard',
-                    'pegawai.index', 'pegawai.create', 'pegawai.show', 'pegawai.edit', 'pegawai.delete',
+                    // 'pegawai.index', 'pegawai.create', 'pegawai.show', 'pegawai.edit', 'pegawai.delete',
                     'member.index', 'member.create', 'member.show', 'member.edit', 'member.delete',
                     'produk.index', 'produk.create', 'produk.show', 'produk.edit', 'produk.delete',
                     'transaksipenjualan.index', 'transaksipenjualan.create', 'transaksipenjualan.show', 'transaksipenjualan.detail',

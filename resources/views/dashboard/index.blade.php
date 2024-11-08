@@ -8,143 +8,133 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* CSS Dasar */
+        /* Basic Styling */
         body {
             font-family: 'Lusitana', sans-serif;
             display: flex;
-            background-color: #FAF3E0; /* Warna latar belakang umum */
+            background-color: #FAF3E0;
             margin: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background-color: #466ba0;
+            color: #FFF;
+            height: 100vh;
+            position: fixed;
+        }
+
+        /* Main Content Styling */
         .main-content {
-            margin-left: 280px;
+            margin-left: 250px; /* Width of the sidebar */
             padding: 20px;
-            width: calc(100% - 280px);
-            background-color: rgba(2, 62, 138, 0.65); /* Latar belakang konten utama */
-            color: white; /* Warna teks putih */
-            min-height: 100vh; /* Tinggi minimum untuk konten utama */
+            flex: 1;
+            background-color: #FAF3E0;
+            color: #333;
+            overflow-y: auto; /* Allows scrolling if content is large */
         }
 
-        /* Card Styling */
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Header Styling */
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
             margin-bottom: 20px;
+            color: #466ba0;
         }
+
+        /* Card Container Styling */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
         .card {
-            background-color: #FFF; /* Warna latar belakang kartu putih */
-            border: 4px solid #697565;
+            background-color: #e3ecf6;
+            border: 2px solid #466ba0;
             border-radius: 10px;
-            padding: 15px;
+            padding: 20px;
             color: #333;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            flex: 1;
             text-align: center;
-            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .card-title {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
+            color: #466ba0;
+            margin-bottom: 10px;
         }
+
         .card p {
-            font-size: 24px;
-            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #466ba0;
         }
 
-        /* Chart and Last Sales Containers */
-        .row-container {
-            display: flex;
-            gap: 20px; /* Jarak antara chart dan last sales */
-            margin-top: 20px; /* Jarak atas */
-        }
-
-        .chart-container, .sales-container {
-            background-color: #FFFFFF; /* Mengatur latar belakang untuk chart dan sales */
-            border: 7px solid #697565;
+        /* Full-width Chart Container for Recent Revenue */
+        .chart-container {
+            background-color: #FFFFFF;
+            border: 2px solid #697565;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 100%; /* Full width to take up the space */
         }
 
-        .chart-container {
-            flex: 2; /* Lebar chart lebih besar */
-            max-width: 60%; /* Atur lebar maksimal agar chart lebih kecil */
+        .chart-container h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #333;
         }
 
-        .sales-container {
-            flex: 1; /* Lebar sales lebih kecil */
-            max-width: 40%; /* Atur lebar maksimal agar last sales lebih kecil */
-        }
-
-        .sales-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .sale-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .sale-item img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .sale-item p {
-            margin: 0;
-            font-size: 16px;
-        }
-        .sale-item span {
-            font-size: 14px;
-            color: #666;
-        }
     </style>
 </head>
+
 <body>
-    <!-- Include Sidebar -->
-    @include('layout.sidebar')
-    <!-- Dropdown positioned at the top-right corner -->
-    <div class="dropdown user-dropdown mt-4 pb-4">
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <!-- Display Pegawai photo if available, otherwise use a default image -->
-            <img src="{{ auth()->user()->pegawai && auth()->user()->pegawai->foto ? asset('/pegawaii.jpg' . auth()->user()->pegawai->foto) : asset('pegawaibisayok.jpeg') }}" 
-                alt="Pegawai" width="30" height="30" class="rounded-square">
-            <!-- Display Pegawai name if available, otherwise show 'Guest' -->
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow text-left">
-            <li>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit" class="dropdown-item text-white bg-transparent border-0 d-flex align-items-center">
-                        <i class="bi bi-box-arrow-right"></i>
-                        <span class="ms-2">Logout</span>
-                    </button>
-                </form>
-            </li>
-        </ul>
+    <!-- Sidebar (unchanged) -->
+    <div class="sidebar">
+        @include('layout.sidebar')
     </div>
+
     <!-- Main Content -->
     <div class="main-content">
         <h1>Dashboard</h1>
-        {{-- <h2>{{session('user')->role->nama_role}}</h2> --}}
+        <div class="d-flex justify-content-end align-items-center mb-3"> <!-- Added margin-bottom here -->
+            <div class="dropdown border rounded shadow p-2 bg-light me-3"> <!-- Added margin-end here -->
+                <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="Pegawai" width="30" height="30" class="rounded-circle me-2">
+                    <span class="d-none d-sm-inline mx-1">({{ auth()->check() ? auth()->user()->nama : 'Guest' }})</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    {{-- <li><a class="dropdown-item text-dark" href="/profile">Profile</a></li> --}}
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-dark">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-        <!-- Card Container -->
+        <!-- Card Container (2 Columns) -->
         <div class="card-container">
             <div class="card">
-                <div class="card-title">Income</div>
+                <div class="card-title">Collected</div>
                 <p>Rp {{ number_format($totalIncome, 2, ',', '.') }}</p>
             </div>
             <div class="card">
-                <div class="card-title">Total Sales</div>
+                <div class="card-title">Sold Items</div>
                 <p>{{ $totalSales }}</p>
             </div>
             <div class="card">
-                <div class="card-title">Total Product</div>
+                <div class="card-title">Total Invoices</div>
                 <p>{{ $totalProduct }}</p>
             </div>
             <div class="card">
@@ -152,33 +142,19 @@
                 <p>{{ $totalMember }}</p>
             </div>
         </div>
- 
-        <!-- Chart and Last Sales Containers -->
-        <div class="row-container">
-            <div class="chart-container">
-                <h3>Graphic Sales</h3>
-                <canvas id="salesChart"></canvas>
-            </div>
- 
-            <div class="sales-container">
-                <h3>Last Sales</h3>
-                <ul class="sales-list">
-                    {{-- Contoh item penjualan terakhir --}}
-                    {{-- <li class="sale-item">
-                        <img src="images/profile1.jpg" alt="Emo">
-                        <p>Emo<br><span>emo@gmail.com</span><br>Rp 20.000,00</p>
-                    </li> --}}
-                    {{-- <li class="sale-item">
-                        <img src="images/profile2.jpg" alt="Eric Chou">
-                        <p>Eric Chou<br><span>ericchou@gmail.com</span><br>Rp 42.000,00</p>
-                    </li> --}}
-                    <!-- Tambahkan penjualan terakhir lainnya -->
-                </ul>
-            </div>
+
+        <!-- Full-width Recent Revenue Section -->
+        <div class="chart-container">
+            <h3>Recent Revenue</h3>
+            <select>
+                <option>Bulan/Tahun</option>
+                <option>Karyawan</option>
+            </select>
+            <canvas id="salesChart"></canvas>
         </div>
     </div>
- 
-    <!-- Tambahkan link ke Chart.js -->
+
+    <!-- Chart.js Script -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
