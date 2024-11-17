@@ -18,12 +18,12 @@ class Member extends Model
 
     // Tentukan kolom yang bisa diisi (mass assignable)
     protected $fillable = [
-        'nama_member',
-        'nohp_member',
-        'periode_awal_member',
-        'periode_akhir_member',
-        'foto_member',
-        'id_levelmember' // Menambahkan id_levelmember jika akan digunakan dalam relasi
+        'nama',
+        'no_hp',
+        'periode_awal',
+        'periode_akhir',
+        'foto',
+        'id_level_member' // Menambahkan id_levelmember jika akan digunakan dalam relasi
     ];
 
     // Tentukan jika ada kolom soft delete
@@ -35,13 +35,23 @@ class Member extends Model
     // Relasi ke LevelMember
     public function levelmember()
     {
-        return $this->belongsTo(LevelMember::class, 'id_levelmember'); // Relasi ke LevelMember
+        return $this->belongsTo(LevelMember::class, 'id_level_member', 'id_level_member'); // Relasi ke LevelMember
+    }
+    public function getNamaLevelAttribute()
+    {
+        $levels = [
+            1001 => 'Bronze',
+            1002 => 'Silver',
+            1003 => 'Gold',
+        ];
+    
+        return $levels[$this->id_level_member]??'Unknown';
     }
 
     // Relasi ke Member lain jika ada (jika Member memiliki relasi dengan Member lain, misal sebagai grup)
     // Jika ini adalah relasi yang valid, namanya harus berbeda
     public function members()
     {
-        return $this->hasMany(Member::class, 'id_levelmember'); // Relasi ke anggota lain
+        return $this->hasMany(Member::class, 'id_level_member', 'id'); // Relasi ke anggota lain
     }
 }

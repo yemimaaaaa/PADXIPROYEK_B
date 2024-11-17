@@ -4,7 +4,6 @@
 
 @section('content')
     <style>
-        /* Gaya untuk memastikan gambar tidak melebar dan menyesuaikan dengan kolom */
         .card img {
             aspect-ratio: 16 / 9;
             width: 100%;
@@ -13,13 +12,15 @@
             border-top-right-radius: 8px;
         }
 
-        /* Sesuaikan tinggi gambar pada layar yang lebih kecil */
         @media (max-width: 600px) {
             .card img {
                 max-height: 280px;
             }
         }
     </style>
+    <!-- Popper.js dan Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     <body>
         <div class="container mt-2">
             <h2>Data Stok</h2>
@@ -37,50 +38,104 @@
                             </form>
                         </li>
                     </ul>
-                </div>
+                </div>                
             </div>
 
-            <!-- Baris pencarian dan tombol create stok -->
-            <div class="row align-items-center mt-4 mb-3">
-                <div class="col text-start">
-                    <form class="d-flex" action="/stok/search" method="GET">
-                        <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+            <div class="container mt-2">
+                <div class="row align-items-center mt-4 mb-3">
+                    <div class="col text-start">
+                        <form class="d-flex" action="/stok/search" method="GET">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        </form>
+                    </div>
+                    <div class="col text-end">
+                        <a href="{{ route('stok.create') }}" class="btn btn-primary">Create Stok</a>
+                    </div>
                 </div>
-                <div class="col text-end">
-                    <button type="button" class="btn btn-primary">Create Stok</button>
-                </div>
-            </div>
 
-            <!-- Baris data stok menggunakan row-cols untuk responsivitas -->
-            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                @foreach($stoks as $index => $stok)
-                    <div class="col">
-                        <div class="card h-100">
-                            <img src="{{ asset('/'. $stok['foto_stok']) }}" alt="{{ $stok['nama_stok'] }}" class="card-img-top">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $stok->nama_stok }}</h5>
-                                <p class="card-text">
-                                    Jenis: {{ $stok->jenis_stok }} <br>
-                                    Tanggal Masuk: {{ $stok->tanggal_masuk_stok }} <br>
-                                    Detail Stok: {{ $stok->detail_stok }} <br>
-                                    ID Pegawai: {{ $stok->id_pegawai }}
-                                </p>
-                                <div class="d-flex justify-content-center mt-3">
-                                    <a href="/stok/{{ $stok->id_stok }}/edit" class="btn btn-outline-primary btn-sm me-2">Edit</a>
-                                    <form action="/stok/{{ $stok->id_stok }}/delete" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
-                                    </form>
+                <div class="container text-center">
+                    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+                        @foreach($stoks as $stok)
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="{{ asset('/'. $stok['foto_stok']) }}" alt="{{ $stok['nama_stok'] }}" class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $stok->nama_stok }}</h5>
+                                        <p class="card-text">
+                                            <strong>Jenis:</strong> {{ $stok->jenis_stok }} <br>
+                                            <strong>Tanggal Masuk:</strong> {{ $stok->tanggal_masuk_stok }} <br>
+                                            <strong>Detail Stok:</strong> {{ $stok->detail_stok }} <br>
+                                            <strong>ID Pegawai:</strong> {{ $stok->id_pegawai }}
+                                        </p>
+                                        <div class="d-flex justify-content-center mt-3 gap-2">
+                                            <a href="{{ route('stok.edit', ['id' => $stok->id_stok]) }}" class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                                            <button class="btn btn-outline-danger btn-sm" onclick="showDeleteModal({{ $stok->id_stok }})">Delete</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Konfirmasi Hapus -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin ingin menghapus data stok ini?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <form id="deleteForm" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Ya,Hapus</button>
+                            </form>
                         </div>
                     </div>
-                @endforeach
+                </div>
+            </div>
+
+        <!-- Toast Notification -->
+        @if(session('success'))
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('success') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
             </div>
         </div>
+        @endif
+
+        <script>
+            function showDeleteModal(id) {
+                const deleteForm = document.getElementById('deleteForm');
+                deleteForm.action = `/stok/${id}/delete`; // Set action URL
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {});
+                deleteModal.show();
+            }
+
+            // Auto-show Toast Notification
+            document.addEventListener('DOMContentLoaded', function () {
+                const successToast = document.getElementById('successToast');
+                if (successToast) {
+                    const toast = new bootstrap.Toast(successToast);
+                    toast.show();
+                }
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     </body>
 @endsection
 </html>

@@ -21,7 +21,9 @@ class TransaksiPenjualan extends Model
         'tanggal_penjualan',
         'nominal_uang_diterima',
         'nominal_uang_kembalian',
-        'subtotal',
+        'total',
+        //'total_diskon',
+        //'subtotal',
         'payment_method',
         'id_pegawai',
         'id_member',
@@ -43,5 +45,20 @@ class TransaksiPenjualan extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'id_member');
+    }
+
+    public function detail_transaksi()
+    {
+        return $this->belongsTo(DetailTransaksi::class, 'id_detail_transaksi');
+    }
+
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'id_produk');
+    }
+
+    public function levelmember()
+    {
+        return $this->belongsTo(Produk::class, 'id_level_member');
     }
 }

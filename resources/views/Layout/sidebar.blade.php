@@ -115,6 +115,13 @@
                             </a>                                   
                         </li>
                         <li>
+                            <a id="poinmember" href="{{ route('poinmember.index') }}" class="nav-link px-0 align-middle">
+                                <i class="bi bi-star"></i>
+                                <span class="ms-1 d-none d-sm-inline">Poin Member</span>
+                            </a>                                   
+                        </li>
+
+                        <li>
                             <a id="laporantransaksi" href="{{ route('laporantransaksi.index') }}" class="nav-link px-0 align-middle">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span class="ms-1 d-none d-sm-inline">Laporan Transaksi</span>

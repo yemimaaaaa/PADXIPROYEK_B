@@ -165,7 +165,7 @@
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                     datasets: [{
                         label: 'Sales',
-                        data: [10, 15, 12, 8, 17, 10, 18, 22, 19, 24, 21, 25],
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 2, 0],
                         backgroundColor: '#3C3D37'
                     }]
                 },

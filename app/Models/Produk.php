@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
 {
+    use SoftDeletes;
     use HasFactory;
 
     // Tentukan nama tabel jika tidak mengikuti konvensi Laravel (plural)
@@ -17,9 +19,10 @@ class Produk extends Model
 
     // Tentukan kolom yang bisa diisi (mass assignable)
     protected $fillable = [
+        'id_produk',
         'nama_produk',
         'jenis_produk',
-        'harga_produk',
+        'harga',
         'foto_produk',
         'deskripsi_produk',
     ];

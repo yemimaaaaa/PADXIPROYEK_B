@@ -19,11 +19,12 @@ class Pegawai extends Model implements AuthenticatableContract
 
     // Tentukan kolom yang bisa diisi (mass assignable)
     protected $fillable = [
-        'nama_pegawai',
+        'nama',
         'username',
         'password',
-        'nohp_pegawai',
-        'email_pegawai',
+        'foto',
+        'no_hp',
+        'email',
         'id_role'
     ];
 

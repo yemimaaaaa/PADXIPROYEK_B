@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LevelMember extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Tentukan nama tabel jika tidak mengikuti konvensi Laravel
     protected $table = 'levelmember';
@@ -32,13 +32,13 @@ class LevelMember extends Model
     // Relasi ke LevelMember
     public function levelmember()
     {
-        return $this->belongsTo(LevelMember::class, 'id_levelmember'); // Relasi ke LevelMember
+        return $this->belongsTo(LevelMember::class, 'id_level_member'); // Relasi ke LevelMember
     }
 
     // Relasi ke Member lain jika ada (jika Member memiliki relasi dengan Member lain, misal sebagai grup)
     // Jika ini adalah relasi yang valid, namanya harus berbeda
     public function members()
     {
-        return $this->hasMany(Member::class, 'id_levelmember'); // Relasi ke anggota lain
+        return $this->hasMany(Member::class, 'id_level_member'); // Relasi ke anggota lain
     }
 }

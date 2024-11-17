@@ -6,7 +6,7 @@
     <style>
         /* Mengatur tampilan gambar di dalam kartu */
         .card img {
-            aspect-ratio: 16 / 9;
+            aspect-ratio: 16 / 10;
             width: 100%;
             object-fit: cover;
             border-top-left-radius: 8px;
@@ -48,6 +48,7 @@
                     </ul>
                 </div>
             </div>
+        </div>
 
             <div class="row align-items-center mt-4 mb-3">
                 <div class="col text-start">
@@ -57,7 +58,7 @@
                     </form>
                 </div>
                 <div class="col text-end">
-                    <a href="/member/create" class="btn btn-primary">Create Member</a>
+                    <a href="{{ route('member.create') }}" class="btn btn-primary">Create Member</a>
                 </div>
             </div>
 
@@ -73,23 +74,79 @@
                                         <strong>No. Telepon:</strong> {{ $member->no_hp }} <br>
                                         <strong>Periode Awal:</strong> {{ $member->periode_awal }} <br>
                                         <strong>Periode Akhir:</strong> {{ $member->periode_akhir }} <br>
-                                        <strong>Level Member:</strong> {{ $member->id_level_member }}
+                                        <strong>Level Member:</strong> {{ $member->nama_level }}
+                                        {{-- <div class="mb-1">📱 {{ $member->no_hp }}</div>
+                                        <div class="mb-1">🗓️ {{ $member->periode_awal }}</div>
+                                        <div class="mb-1">📅 {{ $member->periode_akhir }}</div>
+                                        <div>⭐ Level {{ $member->id_level_member }}</div> --}}
                                     </p>
                                 </div>
                                 <div class="d-flex justify-content-center mt-3 mb-3">
-                                    <a href="/member/{{ $member->id_member }}/edit" class="btn btn-outline-primary btn-sm me-2">Edit</a>
-                                    <form action="/member/{{ $member->id_member }}/delete" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
-                                    </form>
+                                    <a href="{{ route('member.edit', ['id' => $member->id_member]) }}" class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="showDeleteModal('{{ $member->id_member }}')">Delete</button>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             </div>
+
+            <!-- Modal Konfirmasi Hapus -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Apakah Anda yakin ingin menghapus data member ini?
+                    </div>
+                    <div class="modal-footer">
+                        <form id="deleteForm" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- Toast Notification -->
+        @if(session('success'))
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('success') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <script>
+            function showDeleteModal(id) {
+                const deleteForm = document.getElementById('deleteForm');
+                deleteForm.action = `/member/${id}/delete`; // Set action URL
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), {});
+                deleteModal.show();
+            }
+
+            // Auto-show Toast Notification
+            document.addEventListener('DOMContentLoaded', function () {
+                const successToast = document.getElementById('successToast');
+                if (successToast) {
+                    const toast = new bootstrap.Toast(successToast);
+                    toast.show();
+                }
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     </body>
 @endsection
 </html>

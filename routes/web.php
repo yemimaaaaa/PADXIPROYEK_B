@@ -10,6 +10,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\TransaksiPenjualanController;
 use App\Http\Controllers\LaporanTransaksiController;
+use App\Http\Controllers\PoinMemberController;
 
 /*
 |--------------------------------------------------------------------------|
@@ -41,29 +42,76 @@ Route::middleware('auth')->group(function () {
 
     // Product routes
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk.index');
-    Route::get('/produk/search', [ProdukController::class, 'search'])->name('produk.search');
+    // Form untuk membuat produk baru
     Route::get('/produk/create', [ProdukController::class, 'create'])->name('produk.create');
-    Route::get('/produk/(id_produk)/update', [ProdukController::class, 'update'])->name('produk.update');
-    Route::get('/produk/(id_produk)/delete', [ProdukController::class, 'delete'])->name('produk.delete');
+    // Menyimpan produk baru
+    Route::post('/produk/store', [ProdukController::class, 'store'])->name('produk.store');
+    // Mencari produk
+    Route::get('/produk/search', [ProdukController::class, 'search'])->name('produk.search');
+       // Rute untuk menampilkan halaman edit produk
+    Route::get('/produk/{id}/edit', [ProdukController::class, 'edit'])->name('produk.edit');
+    // Rute untuk mengupdate produk
+    Route::put('/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
+    // Rute untuk menghapus produk
+    Route::delete('/produk/{id}/delete', [ProdukController::class, 'destroy'])->name('produk.delete');
+
 
     // Member routes
     Route::get('/member', [MemberController::class, 'index'])->name('member.index');
+    // Form untuk membuat produk baru
+    Route::get('/member/create', [MemberController::class, 'create'])->name('member.create');
+    //Route::get('/member/{id}/discount', [MemberController::class, 'showDiscount'])->name('member.discount');
+    Route::post('/member/store', [MemberController::class, 'store'])->name('member.store');
     Route::get('/member/search', [MemberController::class, 'search'])->name('member.search');
+    // Rute untuk menampilkan halaman edit member
+    Route::get('/member/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
+    // Rute untuk mengupdate member
+    Route::put('/member/{id}', [MemberController::class, 'update'])->name('member.update');
+    // Rute untuk menghapus member
+    Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
 
     // Employee routes
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
+    Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
     Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
+    // Rute untuk menampilkan halaman edit member
+    Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    // Rute untuk mengupdate member
+    Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    // Rute untuk menghapus member
+    Route::delete('/pegawai/{id}/delete', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
 
-    // Stock routes
+    
+    //stok
     Route::get('/stok', [StokController::class, 'index'])->name('stok.index');
     Route::get('/stok/search', [StokController::class, 'search'])->name('stok.search');
+    // Stock routes
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/stok/create', [StokController::class, 'create'])->name('stok.create');
+        Route::post('/stok/store', [StokController::class, 'store'])->name('stok.store');
+        Route::get('/stok/{id}/edit', [StokController::class, 'edit'])->name('stok.edit');
+        // Rute untuk mengupdate produk
+        Route::put('/stok/{id}', [StokController::class, 'update'])->name('stok.update');
+    });
+    // Rute untuk menghapus produk
+    Route::delete('/stok/{id}/delete', [StokController::class, 'destroy'])->name('stok.delete');
+
 
     // Sales transaction routes
-    Route::get('/transaksipenjualan', [TransaksiPenjualanController::class, 'index'])->name('transaksipenjualan.index');
-    Route::get('/transaksipenjualan/search', [TransaksiPenjualanController::class, 'search'])->name('transaksipenjualan.search');
-    Route::get('/transaksipenjualan/{kode_transaksi}/edit', [TransaksiPenjualanController::class, 'edit'])->name('transaksipenjualan.edit');
-    Route::get('/transaksipenjualan/{kode_transaksi}/cetak', [TransaksiPenjualanController::class, 'cetak'])->name('transaksipenjualan.cetak');
+    Route::get('/transaksipenjualan', [TransaksiPenjualanController::class, 'index'])->name('transaksipenjualan.index'); // Menampilkan semua transaksi
+    Route::get('/transaksipenjualan/create', [TransaksiPenjualanController::class, 'create'])->name('transaksipenjualan.create'); // Menampilkan form buat transaksi
+    Route::post('/transaksipenjualan/store', [TransaksiPenjualanController::class, 'store'])->name('transaksipenjualan.store'); // Menyimpan data transaksi baru
+    Route::get('/transaksipenjualan/search', [TransaksiPenjualanController::class, 'search'])->name('transaksipenjualan.search'); // Mencari transaksi berdasarkan parameter
+    Route::get('/transaksipenjualan/{kode_transaksi}/edit', [TransaksiPenjualanController::class, 'edit'])->name('transaksipenjualan.edit'); // Menampilkan form edit transaksi
+    Route::put('/transaksipenjualan/{kode_transaksi}', [TransaksiPenjualanController::class, 'update'])->name('transaksipenjualan.update'); // Mengupdate data transaksi
+    Route::get('/transaksipenjualan/{kode_transaksi}/cetak', [TransaksiPenjualanController::class, 'cetak'])->name('transaksipenjualan.cetak'); // Mencetak transaksi
+    Route::get('/transaksipenjualan/{kode_transaksi}/detail', [TransaksiPenjualanController::class, 'detail'])->name('transaksipenjualan.detail'); // Mencetak transaksi
+
 
     // Report routes
     Route::get('/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporantransaksi.index');
+
+    // Poin routes
+    Route::get('/poinmember', [PoinMemberController::class, 'index'])->name('poinmember.index');
 });
