@@ -106,32 +106,32 @@
         </div>
 
         <!-- Detail Harga -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Total:</h4>
-                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->total, 0, ',', '.') }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Total:</h4>
+                    <p class="text-lg text-gray-600">Rp{{ number_format($subtotal, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Total Diskon:</h4>
+                    <p class="text-lg text-gray-600">Rp{{ number_format($totalDiskon, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Subtotal Setelah Diskon:</h4>
+                    <p class="text-lg text-gray-600">Rp{{ number_format($subtotalSetelahDiskon, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Nominal Uang Diterima:</h4>
+                    <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_diterima, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Nominal Uang Kembalian:</h4>
+                    <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_kembalian, 0, ',', '.') }}</p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h4 class="text-gray-700 font-semibold">Poin yang Diterima:</h4>
+                    <p class="text-lg text-gray-600">{{ $poinDiterima }}</p>
+                </div>
             </div>
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Total Diskon:</h4>
-                <p class="text-lg text-gray-600">Rp{{ number_format($totalDiskon, 0, ',', '.') }}</p>
-            </div>
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Subtotal Setelah Diskon:</h4>
-                <p class="text-lg text-gray-600">Rp{{ number_format($subtotalSetelahDiskon, 0, ',', '.') }}</p>
-            </div>
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Nominal Uang Diterima:</h4>
-                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_diterima, 0, ',', '.') }}</p>
-            </div>
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Nominal Uang Kembalian:</h4>
-                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_kembalian, 0, ',', '.') }}</p>
-            </div>
-            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
-                <h4 class="text-gray-700 font-semibold">Poin yang Diterima:</h4>
-                <p class="text-lg text-gray-600">{{ $poinDiterima }}</p>
-            </div>
-        </div>
 
         <!-- Tombol Aksi -->
         <div class="flex justify-center space-x-4">

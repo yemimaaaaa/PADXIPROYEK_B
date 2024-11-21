@@ -11,6 +11,10 @@ use App\Http\Controllers\StokController;
 use App\Http\Controllers\TransaksiPenjualanController;
 use App\Http\Controllers\LaporanTransaksiController;
 use App\Http\Controllers\PoinMemberController;
+use App\Http\Controllers\LandingPageController;
+
+Route::get('/', [LandingPageController::class, 'index'])->name('landingpage');
+
 
 /*
 |--------------------------------------------------------------------------|

@@ -199,15 +199,20 @@ public function cetak($kode_transaksi)
     // Hitung subtotal dari detail transaksi
     $subtotal = $transaksi->detailtransaksi->sum('subtotal');
 
-    // Ambil diskon berdasarkan level member
-    $diskonRate = 0;
-    if ($transaksi->member && $transaksi->member->id_level_member) {
-        switch ($transaksi->member->id_level_member) {
-            case 1: $diskonRate = 0.05; break; // Bronze
-            case 2: $diskonRate = 0.10; break; // Silver
-            case 3: $diskonRate = 0.15; break; // Gold
-        }
-    }
+    // Gunakan tingkatan_level untuk menentukan diskon
+    $tingkatanLevel = $transaksi->member->levelmember->tingkatan_level ?? null;
+    $diskonRate = match (strtolower($tingkatanLevel)) {
+        'bronze' => 0.05,
+        'silver' => 0.10,
+        'gold' => 0.15,
+        default => 0, // Tidak ada diskon jika tingkatan_level tidak ditemukan
+    };
+
+    // Log untuk debugging
+    Log::info('Perhitungan diskon berdasarkan tingkatan_level:', [
+        'tingkatan_level' => $tingkatanLevel,
+        'diskonRate' => $diskonRate,
+    ]);
 
     // Hitung total diskon
     $totalDiskon = $subtotal * $diskonRate;
@@ -216,22 +221,22 @@ public function cetak($kode_transaksi)
     $totalSetelahDiskon = $subtotal - $totalDiskon;
 
     // Hitung poin yang diterima
-    $poinDiterima = floor($totalSetelahDiskon / 1000);
+    $poinDiterima = floor($subtotal / 1000);
 
     // Log untuk debugging
-    Log::info('Detail transaksi:', [
+    Log::info('Perhitungan Transaksi:', [
         'subtotal' => $subtotal,
         'diskonRate' => $diskonRate,
         'totalDiskon' => $totalDiskon,
-        'totalSetelahDiskon' => $totalSetelahDiskon,
+        'subtotalSetelahDiskon' => $totalSetelahDiskon,
         'poinDiterima' => $poinDiterima,
     ]);
 
-    // Kirim data ke view
+    // Kirim data ke view untuk dicetak sebagai PDF
     return Pdf::loadView('transaksipenjualan.cetak', [
         'transaksi' => $transaksi,
         'subtotal' => $subtotal,
-        'totalDiskon' => $totalDiskon, // Pastikan variabel ini dikirim
+        'totalDiskon' => $totalDiskon,
         'totalSetelahDiskon' => $totalSetelahDiskon,
         'poinDiterima' => $poinDiterima,
     ])->download('nota-transaksi-' . $transaksi->kode_transaksi . '.pdf');
@@ -248,39 +253,37 @@ public function detail($kode_transaksi)
         ->select('detailtransaksi.*', 'produk.nama_produk', 'produk.harga')
         ->get();
 
-    // Hitung subtotal
+    // Hitung subtotal dari detail transaksi
     $subtotal = $detailtransaksi->sum(function ($item) {
         return $item->harga * $item->jumlah;
     });
 
-    // Cek apakah member memiliki level
-    $diskonRate = 0;
-    if ($transaksi->member && $transaksi->member->id_level_member) {
-        switch ($transaksi->member->id_level_member) {
-            case 1: $diskonRate = 0.05; break; // Bronze
-            case 2: $diskonRate = 0.10; break; // Silver
-            case 3: $diskonRate = 0.15; break; // Gold
-        }
-    }
+    // Gunakan tingkatan_level untuk menentukan diskon
+    $tingkatanLevel = $transaksi->member->levelmember->tingkatan_level ?? null;
+    $diskonRate = match (strtolower($tingkatanLevel)) {
+        'bronze' => 0.05,
+        'silver' => 0.10,
+        'gold' => 0.15,
+        default => 0, // Tidak ada diskon jika tingkatan_level tidak ditemukan
+    };
 
-    // Debug untuk memastikan nilai diskon
-    Log::info('Debug Member dan Diskon:', [
-        'member_id' => $transaksi->member->id_member ?? 'Tidak Ada Member',
-        'id_level_member' => $transaksi->member->id_level_member ?? 'Tidak Ada Level',
+    // Log untuk debugging
+    Log::info('Perhitungan diskon berdasarkan tingkatan_level:', [
+        'tingkatan_level' => $tingkatanLevel,
         'diskonRate' => $diskonRate,
     ]);
 
     // Hitung total diskon
     $totalDiskon = $subtotal * $diskonRate;
 
-    // Subtotal setelah diskon
+    // Hitung subtotal setelah diskon
     $subtotalSetelahDiskon = $subtotal - $totalDiskon;
 
-    // Poin diterima
-    $poinDiterima = $subtotalSetelahDiskon > 0 ? floor($subtotalSetelahDiskon / 1000) : 0;
+    // Hitung poin yang diterima
+    $poinDiterima = floor($subtotal / 1000);
 
-    // Log untuk memastikan perhitungan
-    Log::info('Detail Transaksi:', [
+    // Debugging log untuk memastikan perhitungan
+    Log::info('Perhitungan Transaksi:', [
         'subtotal' => $subtotal,
         'diskonRate' => $diskonRate,
         'totalDiskon' => $totalDiskon,
@@ -288,12 +291,16 @@ public function detail($kode_transaksi)
         'poinDiterima' => $poinDiterima,
     ]);
 
+    // Kirim data ke view
     return view('transaksipenjualan.detail', compact(
-        'transaksi', 'detailtransaksi', 'subtotal', 'totalDiskon', 'subtotalSetelahDiskon', 'poinDiterima'
+        'transaksi',
+        'detailtransaksi',
+        'subtotal',
+        'totalDiskon',
+        'subtotalSetelahDiskon',
+        'poinDiterima'
     ));
 }
-
-
 
 public function destroy($kodeTransaksi)
 {
