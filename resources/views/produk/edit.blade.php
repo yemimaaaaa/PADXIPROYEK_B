@@ -6,143 +6,144 @@
     <link href="https://fonts.googleapis.com/css2?family=Allerta&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Allerta', sans-serif; /* Menggunakan font Allerta */
+            font-family: 'Allerta', sans-serif;
+            background: linear-gradient(to bottom right, #e3f2fd, #e0e7ff);
         }
 
-        .btn-hover:hover {
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(156, 163, 175, 0.5);
+            font-size: 0.9rem;
+            background-color: #f9fafb;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 6px rgba(79, 70, 229, 0.4);
+        }
+
+        .form-group .error-message {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #f87171;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #4f46e5, #9333ea);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #3730a3, #6d28d9);
             transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .border-red-500 {
-            border-color: #f87171 !important;
+        .btn-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
         }
 
-        .hidden {
-            display: none;
+        .btn-secondary:hover {
+            background-color: #d1d5db;
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 min-h-screen flex items-center justify-center">
-
-    <div class="bg-white shadow-2xl rounded-lg p-10 max-w-3xl w-full">
-        <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">Edit Produk</h2>
-        
-        <!-- Tempat untuk pesan kesalahan -->
-        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6">
-            <strong class="font-bold">Peringatan:</strong>
-            <span id="errorText" class="block sm:inline"></span>
-        </div>
-
-        <form id="updateForm" action="{{ route('produk.update', $produk->id_produk) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+<body class="flex items-center justify-center min-h-screen">
+    <div class="card">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Edit Produk</h2>
+        <form id="editForm" action="{{ route('produk.update', $produk->id_produk) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             @csrf
             @method('PUT')
 
-            <!-- Kode Produk (Read-only) -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Kode Produk:</label>
-                <input type="text" value="{{ $produk->id_produk }}" class="border border-gray-300 p-3 w-full rounded-lg bg-gray-100" readonly>
+            <!-- Kode Produk -->
+            <div class="form-group">
+                <label for="id_produk">Kode Produk:</label>
+                <input type="text" id="id_produk" name="id_produk" value="{{ $produk->id_produk }}" readonly class="bg-gray-100 cursor-not-allowed">
             </div>
 
             <!-- Nama Produk -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Nama Produk:</label>
-                <input type="text" name="nama_produk" value="{{ $produk->nama_produk }}" class="border border-gray-300 p-3 w-full rounded-lg focus:ring-2 focus:ring-blue-500" required>
+            <div class="form-group">
+                <label for="nama_produk">Nama Produk:</label>
+                <input type="text" id="nama_produk" name="nama_produk" value="{{ old('nama_produk', $produk->nama_produk) }}" required>
+                @error('nama_produk')
+                <span class="error-message">{{ $message }}</span>
+                @enderror
             </div>
-
             <!-- Jenis Produk -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Jenis Produk:</label>
-                <select name="jenis_produk" class="border border-gray-300 p-3 w-full rounded-lg focus:ring-2 focus:ring-blue-500" required>
+            <div class="form-group">
+                <label for="jenis_produk">Jenis Produk:</label>
+                <select id="jenis_produk" name="jenis_produk" required>
                     <option value="beverages" {{ $produk->jenis_produk == 'beverages' ? 'selected' : '' }}>Beverages</option>
                     <option value="desserts" {{ $produk->jenis_produk == 'desserts' ? 'selected' : '' }}>Desserts</option>
                     <option value="main course" {{ $produk->jenis_produk == 'main course' ? 'selected' : '' }}>Main Course</option>
                 </select>
             </div>
-
             <!-- Harga Produk -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Harga Produk:</label>
-                <input type="text" name="harga" value="{{ $produk->harga }}" class="border border-gray-300 p-3 w-full rounded-lg focus:ring-2 focus:ring-green-500 bg-green-50" required>
+            <div class="form-group">
+                <label for="harga">Harga Produk:</label>
+                <input type="text" id="harga" name="harga" value="{{ $produk->harga }}" required>
             </div>
-
             <!-- Foto Produk -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Foto Produk:</label>
-                <input type="file" name="foto_produk" class="border border-gray-300 p-3 w-full rounded-lg">
-                
-                <!-- Menampilkan foto saat ini jika ada -->
+            <div class="form-group">
+                <label for="foto_produk">Foto Produk:</label>
+                <input type="file" id="foto_produk" name="foto_produk">
                 @if($produk->foto_produk)
-                    <div class="mt-4">
-                        <img src="{{ asset($produk->foto_produk) }}" alt="Foto Produk" class="w-32 h-32 object-cover rounded-lg shadow-md">
-                    </div>
+                <div class="mt-4">
+                    <img src="{{ asset($produk->foto_produk) }}" alt="Foto Produk" class="w-32 h-32 object-cover rounded-lg shadow-md">
+                </div>
                 @endif
             </div>
-
             <!-- Deskripsi Produk -->
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">Deskripsi Produk:</label>
-                <textarea name="deskripsi_produk" class="border border-gray-300 p-3 w-full rounded-lg h-32 focus:ring-2 focus:ring-blue-500" required>{{ $produk->deskripsi_produk }}</textarea>
+            <div class="form-group">
+                <label for="deskripsi_produk">Deskripsi Produk:</label>
+                <textarea id="deskripsi_produk" name="deskripsi_produk" rows="4" required>{{ $produk->deskripsi_produk }}</textarea>
             </div>
-
             <!-- Tombol Aksi -->
-            <div class="flex justify-between mt-8">
-                <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow-md transition duration-300 hover:bg-blue-700 btn-hover focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    Update Produk
-                </button>
-                <a href="/produk" class="bg-gray-300 text-gray-800 px-8 py-3 rounded-lg shadow-md transition duration-300 hover:bg-gray-400 btn-hover focus:outline-none focus:ring-2 focus:ring-gray-200">
-                    Batal
-                </a>
-            </div>            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Produk</button>
+                <a href="/produk" class="btn btn-secondary">Batal</a>
+            </div>
         </form>
     </div>
-
-    <script>
-        function validateForm() {
-            const namaProduk = document.querySelector('input[name="nama_produk"]');
-            const harga = document.querySelector('input[name="harga"]');
-            const deskripsi = document.querySelector('textarea[name="deskripsi_produk"]');
-            const fotoProduk = document.querySelector('input[name="foto_produk"]');
-            const errorMessage = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            let isValid = true;
-            let message = "";
-
-            // Validasi Nama Produk
-            if (namaProduk.value.trim() === "" || namaProduk.value.length < 3) {
-                isValid = false;
-                message += "- Nama produk harus diisi dan minimal 3 karakter.<br>";
-                namaProduk.classList.add("border-red-500");
-            } else {
-                namaProduk.classList.remove("border-red-500");
-            }
-            // Validasi Harga
-            if (!/^\d+$/.test(harga.value.trim())) {
-                isValid = false;
-                message += "- Harga produk harus berupa angka.<br>";
-                harga.classList.add("border-red-500");
-            } else {
-                harga.classList.remove("border-red-500");
-            }
-
-            // Validasi Deskripsi Produk
-            if (deskripsi.value.trim() === "") {
-                isValid = false;
-                message += "- Deskripsi produk harus diisi.<br>";
-                deskripsi.classList.add("border-red-500");
-            } else {
-                deskripsi.classList.remove("border-red-500");
-            }
-            // Tampilkan pesan kesalahan
-            if (!isValid) {
-                errorText.innerHTML = message;
-                errorMessage.classList.remove("hidden");
-                return false;
-            }
-            // Sembunyikan pesan jika validasi berhasil
-            errorMessage.classList.add("hidden");
-            return true;
-        }
-    </script>
 </body>
 </html>

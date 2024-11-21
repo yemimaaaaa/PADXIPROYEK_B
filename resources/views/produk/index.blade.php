@@ -5,7 +5,7 @@
 @section('content')
     <style>
         .card img {
-            aspect-ratio: 16 / 10;
+            aspect-ratio: 16 / 14;
             width: 100%;
             object-fit: cover;
             border-top-left-radius: 8px;

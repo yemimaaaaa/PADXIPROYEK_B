@@ -6,7 +6,7 @@
     <style>
         /* Mengatur tampilan gambar di dalam kartu */
         .card img {
-            aspect-ratio: 16 / 10;
+            aspect-ratio: 16 / 14;
             width: 100%;
             object-fit: cover;
             border-top-left-radius: 8px;
@@ -63,7 +63,7 @@
             </div>
 
             <div class="container-full-width text-center">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
                     @foreach($members as $member)
                         <div class="col">
                             <div class="card h-100 shadow-sm">

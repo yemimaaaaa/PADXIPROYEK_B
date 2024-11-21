@@ -2,67 +2,144 @@
 <html lang="en">
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .header {
+            background-color: #2563eb;
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+             }
+        .header h2 {
+            font-size: 1.75rem;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        .btn-secondary {
+            background-color: #f9fafb;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #f3f4f6;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-8">
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+<body class="bg-gradient-to-br from-blue-100 to-gray-50 min-h-screen flex items-center justify-center">
+    <div class="container">
         <!-- Header -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-700">Detail Transaksi Penjualan</h1>
+        <div class="header">
+            <h2>Detail Transaksi Penjualan</h2>
         </div>
-
-        <!-- Transaksi Information -->
-        <div class="mb-4">
-            <h2 class="text-lg font-semibold text-gray-600">Informasi Transaksi</h2>
-            <div class="grid grid-cols-2 gap-4 mt-2 text-gray-700">
-                <p><span class="font-semibold">Kode Transaksi:</span> {{ $transaksi->kode_transaksi }}</p>
-                <p><span class="font-semibold">Tanggal Penjualan:</span> {{ $transaksi->tanggal_transaksi }}</p>
-                <p><span class="font-semibold">ID Pegawai:</span> {{ $transaksi->pegawai->id_pegawai }}</p>
-                <p><span class="font-semibold">Nama Pegawai:</span> {{ $transaksi->pegawai->nama }}</p>
+        <!-- Informasi Transaksi -->
+        <div class="grid grid-cols-2 gap-6 mb-8">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Kode Transaksi:</h3>
+                <p class="text-xl font-bold text-blue-500">{{ $transaksi->kode_transaksi }}</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Pegawai:</h3>
+                <p class="text-gray-700">{{ $transaksi->pegawai->nama }}</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Member:</h3>
+                <p class="text-gray-700">{{ $transaksi->member ? $transaksi->member->nama : 'Tanpa Member' }}</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Level Member:</h3>
+                <p class="text-gray-700">{{ optional($transaksi->member->levelmember)->tingkatan_level ?? 'Tidak Ada Level' }}</p>
+            </div>            
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Tanggal Penjualan:</h3>
+                <p class="bg-gray-100 p-3 rounded-lg text-gray-600 shadow">{{ $transaksi->tanggal_penjualan }}</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700">Metode Pembayaran:</h3>
+                <p class="bg-gray-100 p-3 rounded-lg text-gray-600 shadow">{{ $transaksi->payment_method }}</p>
             </div>
         </div>
 
-        <!-- Produk Details -->
-        <div class="mb-6">
-            <h2 class="text-lg font-semibold text-gray-600">Detail Produk</h2>
-            <table class="w-full border-collapse border border-gray-300 mt-4">
-                <thead class="bg-gray-200">
-                    <tr>
-                        <th class="border border-gray-300 px-4 py-2 text-left">Nama Produk</th>
-                        <th class="border border-gray-300 px-4 py-2 text-right">Harga</th>
-                        <th class="border border-gray-300 px-4 py-2 text-right">Jumlah</th>
-                        <th class="border border-gray-300 px-4 py-2 text-right">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($transaksi->details as $detail)
+        <!-- Tabel Produk -->
+        <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-700 mb-3">Produk yang Dibeli:</h3>
+            <div class="overflow-hidden rounded-lg border border-gray-300 shadow-md">
+                <table class="w-full text-left">
+                    <thead class="bg-blue-100 text-gray-700">
                         <tr>
-                            <td class="border border-gray-300 px-4 py-2">{{ $detail->produk->nama_produk }}</td>
-                            <td class="border border-gray-300 px-4 py-2 text-right">Rp {{ number_format($detail->produk->harga, 0, ',', '.') }}</td>
-                            <td class="border border-gray-300 px-4 py-2 text-right">{{ $detail->jumlah }}</td>
-                            <td class="border border-gray-300 px-4 py-2 text-right">Rp {{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                            <th class="px-4 py-2">Produk</th>
+                            <th class="px-4 py-2">Harga</th>
+                            <th class="px-4 py-2">Jumlah</th>
+                            <th class="px-4 py-2">Subtotal</th>
                         </tr>
-                    @endforeach
-                </tbody>
-                <tfoot class="bg-gray-200">
-                    <tr>
-                        <td colspan="3" class="border border-gray-300 px-4 py-2 text-right font-semibold">Total:</td>
-                        <td class="border border-gray-300 px-4 py-2 text-right font-semibold">Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach ($transaksi->detailtransaksi as $detail)
+                        <tr class="even:bg-gray-100">
+                            <td class="px-4 py-2">{{ $detail->produk->nama_produk ?? 'Produk tidak ditemukan' }}</td>
+                            <td class="px-4 py-2">Rp{{ number_format($detail->produk->harga ?? 0, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2">{{ $detail->jumlah }}</td>
+                            <td class="px-4 py-2">Rp{{ number_format($detail->subtotal, 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Actions -->
-        <div class="flex justify-end space-x-4 mt-6">
-            <a href="{{ route('transaksipenjualan.index') }}" class="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300 transition">
+        <!-- Detail Harga -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Total:</h4>
+                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->total, 0, ',', '.') }}</p>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Total Diskon:</h4>
+                <p class="text-lg text-gray-600">Rp{{ number_format($totalDiskon, 0, ',', '.') }}</p>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Subtotal Setelah Diskon:</h4>
+                <p class="text-lg text-gray-600">Rp{{ number_format($subtotalSetelahDiskon, 0, ',', '.') }}</p>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Nominal Uang Diterima:</h4>
+                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_diterima, 0, ',', '.') }}</p>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Nominal Uang Kembalian:</h4>
+                <p class="text-lg text-gray-600">Rp{{ number_format($transaksi->nominal_uang_kembalian, 0, ',', '.') }}</p>
+            </div>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                <h4 class="text-gray-700 font-semibold">Poin yang Diterima:</h4>
+                <p class="text-lg text-gray-600">{{ $poinDiterima }}</p>
+            </div>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="flex justify-center space-x-4">
+            <a href="{{ route('transaksipenjualan.index') }}" class="btn-secondary px-6 py-2 rounded-lg shadow hover:shadow-md">
                 Kembali
+            </a>
+            <a href="{{ route('transaksipenjualan.cetak', ['kode_transaksi' => $transaksi->kode_transaksi]) }}" class="btn-primary px-6 py-2 rounded-lg shadow hover:shadow-md">
+                Cetak Nota
             </a>
         </div>
     </div>

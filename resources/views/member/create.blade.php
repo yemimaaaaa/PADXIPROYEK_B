@@ -100,14 +100,17 @@
                 @enderror
             </div>
 
-            <!-- No HP -->
-            <div class="mb-4">
-                <label for="no_hp" class="block mb-2">No HP:</label>
-                <input type="text" id="no_hp" name="no_hp" class="form-input" value="{{ old('no_hp') }}" placeholder="Masukkan nomor HP" required>
-                @error('no_hp')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+           <!-- No HP -->
+           <div class="input-group mb-6">
+            <label for="no_hp" class="block text-gray-700 font-medium mb-2">
+                <i class="fas fa-phone mr-2 text-yellow-500"></i>No HP
+            </label>
+            <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $member->no_hp ?? '') }}" class="form-input" placeholder="Masukkan nomor HP" required>
+            @error('no_hp')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+            @enderror
+        </div>
+        
 
             <!-- Periode Awal -->
             <div class="mb-4">
@@ -130,12 +133,8 @@
             <!-- Level Member -->
             <div class="mb-4">
                 <label for="id_level_member" class="block mb-2">Level Member:</label>
-                <select id="id_level_member" name="id_level_member" class="form-input" required>
-                    <option value="" disabled selected>Pilih Level Member</option>
-                    <option value="1001" {{ old('id_level_member') == '1001' ? 'selected' : '' }}>Bronze</option>
-                    <option value="1002" {{ old('id_level_member') == '1002' ? 'selected' : '' }}>Silver</option>
-                    <option value="1003" {{ old('id_level_member') == '1003' ? 'selected' : '' }}>Gold</option>
-                </select>
+                <input type="text" id="id_level_member_display" value="Bronze" class="form-input bg-gray-100 cursor-not-allowed" readonly>
+                <input type="hidden" id="id_level_member" name="id_level_member" value="1001">
                 @error('id_level_member')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
@@ -147,20 +146,22 @@
                     <i class="fas fa-image mr-2 text-teal-500"></i>Foto Member:
                 </label>
                 <input type="file" name="foto" id="foto" class="border border-gray-300 p-3 w-full rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                
-                <!-- Menampilkan foto saat ini jika ada -->
+
+                <!-- Menampilkan foto saat ini jika variabel $member ada dan memiliki foto -->
+                @isset($member)
                     @if($member->foto)
-                    <div class="mt-4">
-                        <img src="{{ asset($member->foto) }}" alt="Foto Member" class="w-32 h-32 object-cover rounded-lg shadow-md">
-                    </div>
-                @endif
+                        <div class="mt-4">
+                            <img src="{{ asset($member->foto) }}" alt="Foto Member" class="w-32 h-32 object-cover rounded-lg shadow-md">
+                        </div>
+                    @endif
+                @endisset
 
                 <!-- Pesan error -->
                 @error('foto')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-            
+
 
             <!-- Buttons -->
             <div class="flex justify-between mt-6">
@@ -185,7 +186,26 @@ document.getElementById('periode_awal').addEventListener('change', function () {
         document.getElementById('periode_akhir').value = formattedDate; // Isi Periode Akhir
     }
 });
-
+    
+            // No HP validation
+            const noHp = document.getElementById('no_hp');
+            const noHpError = document.getElementById('noHpError');
+            if (noHp.value.trim().length > 14 || noHp.value.trim() === '') {
+                noHpError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                noHpError.classList.add('hidden');
+            }
+            
+            // Nama validation
+            const nama = document.getElementById('nama');
+            const namaError = document.getElementById('namaError');
+            if (nama.value.trim().length < 3) {
+                namaError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                namaError.classList.add('hidden');
+            }
     </script>
 </body>
 </html>

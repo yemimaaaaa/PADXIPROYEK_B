@@ -71,16 +71,6 @@ class ProdukController extends Controller
     // Hapus pemisah ribuan jika ada (untuk harga)
     $validatedData['harga'] = str_replace('.', '', $validatedData['harga']);
 
-    // Simpan data ke database
-    Produk::create([
-        'id_produk' => $newIdProduk,
-        'nama_produk' => $validatedData['nama_produk'],
-        'jenis_produk' => $validatedData['jenis_produk'],
-        'harga' => $validatedData['harga'],
-        'deskripsi_produk' => $validatedData['deskripsi_produk'],
-        'foto_produk' => $fotoPath, // Menyimpan path foto yang relatif
-    ]);
-
     // Redirect dengan pesan sukses
     return redirect('/produk')->with('success', 'Produk berhasil ditambahkan!');
 }

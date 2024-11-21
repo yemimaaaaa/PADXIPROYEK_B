@@ -103,9 +103,12 @@
                 <label for="no_hp" class="block text-gray-700 font-medium mb-2">
                     <i class="fas fa-phone mr-2 text-yellow-500"></i>No HP
                 </label>
-                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $member->no_hp) }}" class="form-input" placeholder="Masukkan nomor HP" required>
+                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $member->no_hp ?? '') }}" class="form-input" placeholder="Masukkan nomor HP" required>
+                @error('no_hp')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
-
+            
             <!-- Periode Awal -->
             <div class="input-group mb-6">
                 <label for="periode_awal" class="block text-gray-700 font-medium mb-2">
@@ -123,17 +126,16 @@
             </div>
 
             <!-- Foto Membeer -->
-            <div class="mb-6">
-                <label for="foto" class="block text-gray-700 font-medium mb-2">
-                    <i class="fas fa-image mr-2 text-teal-500"></i>Foto Member:
-                </label>
-                <input type="file" name="foto" id="foto" class="border border-gray-300 p-3 w-full rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                <!-- Pesan error -->
-                @error('foto')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+            <div class="mb-4">
+                <label for="foto">Foto:</label>
+                <input type="file" id="foto" name="foto">
+             <!-- Menampilkan foto saat ini jika ada -->
+                @if ($member->foto)
+                    <div class="mt-4">
+                        <img src="{{ asset($member->foto) }}" alt="Foto Member" class="w-32 h-32 object-cover rounded-lg shadow-md">
+                    </div>
+                @endif
             </div>
-            
                 
             <!-- Level Member -->
             <div class="input-group mb-6">
@@ -170,6 +172,26 @@
                     document.getElementById('periode_akhir').value = formattedDate; // Isi Periode Akhir
                 }
             });
+            
+            // No HP validation
+            const noHp = document.getElementById('no_hp');
+            const noHpError = document.getElementById('noHpError');
+            if (noHp.value.trim().length > 14 || noHp.value.trim() === '') {
+                noHpError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                noHpError.classList.add('hidden');
+            }
+
+            // Nama validation
+            const nama = document.getElementById('nama');
+            const namaError = document.getElementById('namaError');
+            if (nama.value.trim().length < 3) {
+                namaError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                namaError.classList.add('hidden');
+            }
         </script>
     </div>
 </body>

@@ -119,8 +119,12 @@
             <!-- Nama Stok -->
             <div class="mb-6">
                 <label for="nama_stok">Nama Stok:</label>
-                <input type="text" id="nama_stok" name="nama_stok" value="{{ $stok->nama_stok }}" required>
+                <input type="text" id="nama_stok" name="nama_stok" value="{{ old('nama_stok', $stok->nama_stok) }}" required>
+                @error('nama_stok')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
+
 
             <!-- Jenis Stok -->
             <div class="mb-6">

@@ -49,6 +49,7 @@ class MemberController extends Controller
             // Tampilkan halaman form untuk membuat member baru
             return view('member.create');
         }
+        
         public function store(Request $request)
         {
             // Validasi data input
@@ -62,15 +63,21 @@ class MemberController extends Controller
                     'regex:/^08[0-9]{9,12}$/',
                 ],
                 'periode_awal' => 'required|date',
-                'id_level_member' => 'required|exists:levelmember,id_level_member',
+                'id_level_member' => 'required|in:1001,1002,1003',
                 'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',//foto wajib untuk diunggah
             ], [
-                'no_hp.regex' => 'Nomor HP harus diawali dengan 08 dan memiliki panjang 9-12 digit.',
+                'no_hp.required' => 'Nomor HP wajib diisi.',
+                'no_hp.regex' => 'Nomor HP harus diawali dengan 08 dan terdiri dari 9 hingga 14 angka.',
+                'no_hp.unique' => 'Nomor HP ini sudah terdaftar.',
                 'foto.required' => 'Foto wajib diunggah.',
                 'foto.image' => 'Foto harus berupa file gambar.',
                 'foto.mimes' => 'Foto harus berformat JPEG, PNG, atau JPG.',
                 'foto.max' => 'Ukuran foto maksimal adalah 2MB.',
             ]);
+
+            // Set default level member ke Bronze jika tidak dipilih
+            $validatedData['id_level_member'] = $validatedData['id_level_member'] ?? '1001';
+
     
             // Proses foto jika diunggah
             $fotoPath = null;
@@ -133,7 +140,9 @@ class MemberController extends Controller
                 'id_level_member' => 'required|exists:levelmember,id_level_member',
                 'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Foto wajib diunggah saat update
             ], [
-                'no_hp.regex' => 'Nomor HP harus diawali dengan 08 dan memiliki panjang 9-12 digit.',
+                'no_hp.required' => 'Nomor HP wajib diisi.',
+                'no_hp.regex' => 'Nomor HP harus diawali dengan 08 dan terdiri dari 9 hingga 14 angka.',
+                'no_hp.unique' => 'Nomor HP ini sudah terdaftar.',
                 'foto.required' => 'Foto wajib diunggah.',
                 'foto.image' => 'Foto harus berupa file gambar.',
                 'foto.mimes' => 'Foto harus berformat JPEG, PNG, atau JPG.',
@@ -142,9 +151,9 @@ class MemberController extends Controller
         
             // Hapus foto lama jika ada
             if ($request->hasFile('foto')) {
-                if ($member->foto && file_exists(public_path($member->foto))) {
-                    unlink(public_path($member->foto));
-                }
+                // if ($member->foto && file_exists(public_path($member->foto))) {
+                //     unlink(public_path($member->foto));
+                // }
             // proses foto baru
                 $foto = $request->file('foto');
                 $fileName = time() . '_' . $foto->getClientOriginalName();
@@ -187,5 +196,20 @@ class MemberController extends Controller
             // Redirect dengan pesan sukses
             return redirect()->route('member.index')->with('success', 'Member berhasil dihapus!');
         }
+
+        // public function cekmember(Request $request)
+        // {
+        //     $keyword = $request->input('nama');
+        //     $member = Member::where('nama', 'LIKE', "%{$keyword}%")->first();
+        
+        //     if ($member) {
+        //         // Jika data ditemukan, kembalikan view dengan data
+        //         return view('member.profile', compact('member'));
+        //     }
+        
+        //     // Jika tidak ditemukan, kembalikan error ke halaman pencarian
+        //     return redirect()->back()->with('error', 'Member tidak ditemukan.');
+        // }
+        
     }
     

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // Pastikan ini diimpor
  
 class RoleMiddleware
 {
@@ -16,6 +17,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
+        Log::info('Rute yang sedang diakses:', ['name' => $request->route()->getName()]);
+
+        $publicRoutes = ['public.member.cekmember'];
+        if (in_array($request->route()->getName(), $publicRoutes)) {
+            return $next($request);
+        }
+
+
         if (Auth::check()) 
         {
             if ('admin' == $role) {
@@ -34,7 +43,7 @@ class RoleMiddleware
                     'pegawai.index', 'pegawai.create', 'pegawai.show', 'pegawai.edit', 'pegawai.delete',
                     'member.index', 'member.create', 'member.show', 'member.edit', 'member.delete',
                     'produk.index', 'produk.create', 'produk.edit', 'produk.delete', 'produk.store',
-                    'transaksipenjualan.index', 'transaksipenjualan.create', 'transaksipenjualan.show', 'transaksipenjualan.edit', 'transaksipenjualan.cetak',
+                    'transaksipenjualan.index', 'transaksipenjualan.create', 'transaksipenjualan.store', 'transaksipenjualan.edit', 'transaksipenjualan.cetak', 'transaksipenjualan.detail',
                     'stok.index', 'stok.create', 'stok.store', 'stok.edit', 'stok.delete',
                     'logout',
                 ],
@@ -45,7 +54,7 @@ class RoleMiddleware
                     // 'pegawai.index', 'pegawai.create', 'pegawai.show', 'pegawai.edit', 'pegawai.delete',
                     'member.index', 'member.create', 'member.show', 'member.edit', 'member.delete',
                     'produk.index', 'produk.create', 'produk.edit', 'produk.delete', 'produk.store',
-                    'transaksipenjualan.index', 'transaksipenjualan.create', 'transaksipenjualan.show', 'transaksipenjualan.edit', 'transaksipenjualan.cetak',
+                    'transaksipenjualan.index', 'transaksipenjualan.create', 'transaksipenjualan.store', 'transaksipenjualan.edit', 'transaksipenjualan.cetak', 'transaksipenjualan.detail',
                     'stok.index', 'stok.create', 'stok.store', 'stok.edit', 'stok.delete',
                     // 'poin.index', 'poin.penukaran', 'poin.show', 
                     'logout',
@@ -70,6 +79,11 @@ class RoleMiddleware
         }
  
         return $next($request);
+
+        return redirect()->route('login')->with([
+            'message' => 'Silakan login terlebih dahulu!',
+            'alert-type' => 'error',
+        ]);
  
     }
 }

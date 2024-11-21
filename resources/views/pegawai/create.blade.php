@@ -140,11 +140,13 @@
             </div>
 
             <!-- No HP -->
-            <div class="mb-4">
-                <label for="no_hp">No HP:</label>
-                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" placeholder="Masukkan nomor HP" required>
+            <div class="input-group mb-6">
+                <label for="no_hp" class="block text-gray-700 font-medium mb-2">
+                    <i class="fas fa-phone mr-2 text-yellow-500"></i>No HP
+                </label>
+                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $pegawai->no_hp ?? '') }}" class="form-input" placeholder="Masukkan nomor HP" required>
                 @error('no_hp')
-                    <span class="error">{{ $message }}</span>
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
 

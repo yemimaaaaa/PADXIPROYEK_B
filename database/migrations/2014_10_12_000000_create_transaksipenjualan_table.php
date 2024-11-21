@@ -16,12 +16,12 @@ return new class extends Migration
             $table->timestamp('tanggal_penjualan');
             $table->float('nominal_uang_diterima', 10,2);
             $table->float('nominal_uang_kembalian', 10,2);
-            $table->float('subtotal', 10,2)->nullable();
+            $table->float('total', 10,2)->nullable();
             $table->enum('payment_method', ['cash', 'debit', 'e-wallet']);
             $table->unsignedBigInteger('id_pegawai'); 
-            $table->foreign('id_pegawai')->references('id_pegawai')->on('pegawai')->onDelete('cascade');
-            $table->unsignedBigInteger('id_member'); 
-            $table->foreign('id_member')->references('id_member')->on('member')->onDelete('cascade');         
+            $table->foreign('id_pegawai')->references('id_pegawai')->on('pegawai');
+            $table->unsignedBigInteger('id_member')->nullable(); // Pastikan nullable diterapkan di sini
+            $table->foreign('id_member')->references('id_member')->on('member');     
             $table->timestamps();
             $table->softDeletes();
         });

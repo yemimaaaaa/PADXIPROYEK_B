@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ShowProfileMemberController;
+use App\Http\Controllers\PublicMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\PegawaiController;
@@ -27,13 +27,18 @@ Route::get('/', function () {
     return view('landingpage');
 });
 
+// Public member routes
+Route::get('/member-list', [MemberController::class, 'showAllMembers'])->name('member.list');
+Route::get('/cek-member', [PublicMemberController::class, 'searchProfile'])->name('public.member.cekmember');
+
+
 // Authentication routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate'])->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Route to check member profile
-Route::get('/showprofile', [MemberController::class, 'showProfile'])->name('showprofile');
+//Route::get('/showprofile', [ShowProfileMemberController::class, 'index'])->name('showprofile.index');
 
 // Group routes that require authentication
 Route::middleware('auth')->group(function () {
@@ -69,6 +74,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/member/{id}', [MemberController::class, 'update'])->name('member.update');
     // Rute untuk menghapus member
     Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
+    //Route::get('/cek-member', [MemberController::class, 'searchProfile'])->name('member.cekmember');
+
 
     // Employee routes
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
@@ -103,10 +110,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaksipenjualan/create', [TransaksiPenjualanController::class, 'create'])->name('transaksipenjualan.create'); // Menampilkan form buat transaksi
     Route::post('/transaksipenjualan/store', [TransaksiPenjualanController::class, 'store'])->name('transaksipenjualan.store'); // Menyimpan data transaksi baru
     Route::get('/transaksipenjualan/search', [TransaksiPenjualanController::class, 'search'])->name('transaksipenjualan.search'); // Mencari transaksi berdasarkan parameter
-    Route::get('/transaksipenjualan/{kode_transaksi}/edit', [TransaksiPenjualanController::class, 'edit'])->name('transaksipenjualan.edit'); // Menampilkan form edit transaksi
-    Route::put('/transaksipenjualan/{kode_transaksi}', [TransaksiPenjualanController::class, 'update'])->name('transaksipenjualan.update'); // Mengupdate data transaksi
+    //Route::get('/transaksipenjualan/{kode_transaksi}/edit', [TransaksiPenjualanController::class, 'edit'])->name('transaksipenjualan.edit'); // Menampilkan form edit transaksi
+    //Route::put('/transaksipenjualan/{kode_transaksi}', [TransaksiPenjualanController::class, 'update'])->name('transaksipenjualan.update'); // Mengupdate data transaksi
     Route::get('/transaksipenjualan/{kode_transaksi}/cetak', [TransaksiPenjualanController::class, 'cetak'])->name('transaksipenjualan.cetak'); // Mencetak transaksi
     Route::get('/transaksipenjualan/{kode_transaksi}/detail', [TransaksiPenjualanController::class, 'detail'])->name('transaksipenjualan.detail'); // Mencetak transaksi
+    Route::delete('/transaksipenjualan/{kode_transaksi}/delete', [TransaksiPenjualanController::class, 'destroy'])->name('transaksipenjualan.delete');
 
 
     // Report routes

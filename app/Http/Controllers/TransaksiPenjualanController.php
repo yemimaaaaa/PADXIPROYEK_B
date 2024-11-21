@@ -9,14 +9,21 @@ use App\Models\Member;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Enums\PaymentMethod;
 use PhpParser\Node\Stmt\Foreach_;
+use Illuminate\Validation\Rule;
 
 class TransaksiPenjualanController extends Controller
 {
     public function index()
     {
         // Eager load the pegawai relationship to avoid N+1 query problem
-        $transaksipenjualans = TransaksiPenjualan::with(['pegawai', 'member'])->get();
+        $transaksipenjualans = TransaksiPenjualan::with(['pegawai', 'member'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
         return view('transaksipenjualan.index', compact('transaksipenjualans'));
     }
 
@@ -48,7 +55,7 @@ class TransaksiPenjualanController extends Controller
         //return view('transaksipenjualan.create', compact('members', 'produks'));        
         $produks = Produk::all(); // Mengambil semua produk
 
-        dd($members->toArray()); // Debug untuk memastikan data members
+        //dd($members->toArray()); // Debug untuk memastikan data members
         // Kirim data pegawai dan member ke view
         return view('transaksipenjualan.create', compact('pegawais', 'members', 'produks'));
     }
@@ -57,131 +64,245 @@ class TransaksiPenjualanController extends Controller
     public function store(Request $request)
 {
     //dd($request->all());
-    // Validasi input
+    Log::info('Nilai yang diterima sebelum validasi:', $request->all());
+
     $validatedData = $request->validate([
-        'tanggal_transaksi' => 'required|date',
+        'tanggal_penjualan' => 'required|date',
         'nominal_uang_diterima' => 'required|numeric|min:0',
         'nominal_uang_kembalian' => 'required|numeric|min:0',
-        'total' => 'required|numeric|min:0',
-        'payment_method' => 'required|string|max:255',
+        'subtotal_keseluruhan' => 'required|numeric|min:1',
+        'subtotal_setelah_diskon' => 'required|numeric|min:1',
+        // 'payment_method' => 'required|in:cash,debit,e_wallet',
+        //'payment_method' => ['required', Rule::in(array_column(\App\Enums\PaymentMethod::cases(), 'value'))],
+        'payment_method' => [
+            'required',
+            Rule::in(array_map('strtolower', array_column(\App\Enums\PaymentMethod::cases(), 'value')))
+        ],
         'id_pegawai' => 'required|exists:pegawai,id_pegawai',
         'id_member' => 'nullable|exists:member,id_member',
+        'produk' => 'required|array|min:1',
+        'produk.*.id_produk' => 'required|exists:produk,id_produk',
+        'produk.*.jumlah' => 'required|integer|min:1',
     ]);
+    $validatedData['payment_method'] = (string) strtolower($validatedData['payment_method']);
+    $validatedData['nominal_uang_diterima'] = (float) $validatedData['nominal_uang_diterima'];
+    $validatedData['nominal_uang_kembalian'] = (float) $validatedData['nominal_uang_kembalian'];
 
-    $member = Member::find($validatedData['id_member']);
+    // Hitung ulang jika subtotal_keseluruhan kosong
+    $totalHarga = collect($request->produk)->reduce(function ($carry, $item) {
+        $produk = Produk::findOrFail($item['id_produk']);
+        return $carry + ($produk->harga * $item['jumlah']);
+    }, 0);
+
     $diskonRate = 0;
-
+    $member = Member::find($request->id_member);
     if ($member) {
         switch ($member->id_level_member) {
-            case 1:
-                $diskonRate = 0.05;
-                break;
-            case 2:
-                $diskonRate = 0.15;
-                break;
-            case 3:
-                $diskonRate = 0.25;
-                break;
+            case 1: $diskonRate = 0.05; break;
+            case 2: $diskonRate = 0.10; break;
+            case 3: $diskonRate = 0.15; break;
         }
     }
 
-    $totalDiskon = $validatedData['total'] * $diskonRate;
+    $totalDiskon = $totalHarga * $diskonRate;
+    $subtotalSetelahDiskon = $totalHarga - $totalDiskon;
 
-    // Generate kode transaksi unik
-    $currentDate = now()->format('Ymd'); // Format: YYYYMMDD
-    $latestTransaksi = TransaksiPenjualan::whereDate('created_at', now())->latest('id')->first();
-    $nextNumber = $latestTransaksi ? intval(substr($latestTransaksi->kode_transaksi, -4)) + 1 : 1;
-    $kodeTransaksi = 'TRX-' . $currentDate . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    // // Gunakan hasil hitungan jika data dari form kosong
+    // $validatedData['subtotal_keseluruhan'] = $validatedData['subtotal_keseluruhan'] ?: $totalHarga;
+    // $validatedData['subtotal_setelah_diskon'] = $validatedData['subtotal_setelah_diskon'] ?: $subtotalSetelahDiskon;
 
-    // Tambahkan kode transaksi ke dalam data validasi
-    $validatedData['kode_transaksi'] = $kodeTransaksi;    
+    // Validasi nilai yang dihitung ulang
+    $validatedData['subtotal_keseluruhan'] = $totalHarga; // Tetap dihitung, tetapi tidak disimpan
+    $validatedData['subtotal_setelah_diskon'] = $subtotalSetelahDiskon;
 
-    // Simpan data transaksi ke tabel TransaksiPenjualan
-    $transaksipenjualan = TransaksiPenjualan::create([
-        'kode_transaksi' => $kodeTransaksi,
-        'tanggal_transaksi' => $validatedData['tanggal_transaksi'],
-        'nominal_uang_diterima' => $validatedData['nominal_uang_diterima'],
-        'nominal_uang_kembalian' => $validatedData['nominal_uang_kembalian'],
-        'total' => $validatedData['total'],
-        'payment_method' => $validatedData['payment_method'],
-        'id_pegawai' => $validatedData['id_pegawai'],
-        'id_member' => $validatedData['id_member'] ?? null,
+    Log::info('Nilai setelah dihitung ulangg:', [
+        'subtotal_keseluruhan' => $totalHarga,
+        'subtotal_setelah_diskon' => $subtotalSetelahDiskon,
+        'total_diskon' => $totalDiskon,
     ]);
 
-    // Simpan detail transaksi
-    foreach ($request->produk as $produk) {
-        $latestDetail = DetailTransaksi::latest('id_detail_transaksi')->first();
-        $newIdDetail = $latestDetail ? intval($latestDetail->id_detail_transaksi) + 1 : 1;
+    // Log::info('Nilai setelah dihitung ulang:', [
+    //     //'subtotal_keseluruhan' => $validatedData['subtotal_keseluruhan'],
+    //     'subtotal_setelah_diskon' => $validatedData['subtotal_setelah_diskon'],
+    //     'total_diskon' => $totalDiskon,
+    // ]);
 
-        $produkModel = Produk::findOrFail($produk['id_produk']);
-        $harga = $produkModel->harga;
-        $subtotal = $harga * $produk['jumlah'];
+    try {
+        DB::beginTransaction();
 
-        DetailTransaksi::create([
-            'id_detail_transaksi' => $newIdDetail,
-            'kode_transaksi' => $transaksipenjualan->kode_transaksi, // Menggunakan objek $transaksipenjualan
-            'id_produk' => $produk['id_produk'],
-            'tanggal_penjualan' => $validatedData['tanggal_transaksi'],
-            'jumlah' => $produk['jumlah'],
-            'subtotal' => $subtotal,
+        // // Generate kode transaksi unik
+        // $currentDate = now()->format('Ymd'); // Format: YYYYMMDD
+        // $latestTransaksi = TransaksiPenjualan::whereDate('created_at', now())->latest('id')->first();
+        // $nextNumber = $latestTransaksi ? intval(substr($latestTransaksi->kode_transaksi, -4)) + 1 : 1;
+        // $kodeTransaksi = 'TRX-' . $currentDate . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+        // Generate kode transaksi unik (berdasarkan transaksi terakhir)
+        $latestTransaksi = TransaksiPenjualan::latest('kode_transaksi')->first(); // Ambil transaksi terakhir berdasarkan kode_transaksi
+
+        // Ambil angka terakhir dari kode transaksi atau mulai dari 6013 jika belum ada transaksi
+        $lastNumber = $latestTransaksi ? intval($latestTransaksi->kode_transaksi) : 6013;
+
+        // Tambahkan 1 untuk transaksi berikutnya
+        $nextNumber = $lastNumber + 1;
+
+        // Gunakan nextNumber sebagai kode transaksi baru
+        $kodeTransaksi = $nextNumber;
+
+        Log::info('Kode transaksi yang dihasilkan:', ['kode_transaksi' => $kodeTransaksi]);
+        
+        // Lanjutkan penyimpanan transaksi
+        $transaksipenjualan = TransaksiPenjualan::create([
+            'kode_transaksi' => $kodeTransaksi, // Buat kode transaksi
+            'tanggal_penjualan' => $validatedData['tanggal_penjualan'],
+            'nominal_uang_diterima' => $validatedData['nominal_uang_diterima'],
+            'nominal_uang_kembalian' => $validatedData['nominal_uang_kembalian'],
+            //'subtotal_keseluruhan' => $validatedData['subtotal_keseluruhan'],
+            //'subtotal_setelah_diskon' => $validatedData['subtotal_setelah_diskon'],
+            //'total' => $validatedData['subtotal_setelah_diskon'],
+            'total' => $subtotalSetelahDiskon,
+            'payment_method' => $validatedData['payment_method'],
+            //'payment_method' => 'debit',
+            'id_pegawai' => $validatedData['id_pegawai'],
+            //'id_member' => $validatedData['id_member'],
+            'id_member' => $validatedData['id_member'] ?? null, // Pastikan null ditangani
         ]);
-    }
 
-    // Redirect dengan pesan sukses
-    return redirect()->route('transaksipenjualan.index')->with('success', 'Transaksi berhasil ditambahkan!');
+        // Simpan detail transaksi
+        foreach ($validatedData['produk'] as $produk) {
+            DetailTransaksi::create([
+                'kode_transaksi' => $transaksipenjualan->kode_transaksi,
+                'id_produk' => $produk['id_produk'],
+                'jumlah' => $produk['jumlah'],
+                'subtotal' => Produk::find($produk['id_produk'])->harga * $produk['jumlah'],
+                'tanggal_penjualan' => $validatedData['tanggal_penjualan'],
+            ]);
+        }
+
+        DB::commit();
+        Log::info('Transaksi berhasil disimpan.');
+
+        return redirect()->route('transaksipenjualan.index')->with('success', 'Transaksi berhasil ditambahkan!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Gagal menyimpan transaksi:', ['error' => $e->getMessage()]);
+        return redirect()->back()->withErrors('Terjadi kesalahan: ' . $e->getMessage());
+    }
 }
-    public function edit($kode_transaksi)
-    {
-        $transaksi = TransaksiPenjualan::where('kode_transaksi', $kode_transaksi)->firstOrFail();
-        //$pegawais = Pegawai::all(); // Mengambil semua pegawai untuk dropdown
-        return view('transaksipenjualan.edit', compact('transaksi'));
-    }
 
-    public function update(Request $request, $kode_transaksi)
+public function cetak($kode_transaksi)
 {
-    // Validasi input
-    $validatedData = $request->validate([
-        'id_pegawai' => 'required|exists:pegawais,id_pegawai',
-        'tanggal_transaksi' => 'required|date',
-        'total_harga' => 'required|numeric|min:0',
-        'nominal_uang_diterima' => 'required|numeric|min:0',
-        'nominal_uang_kembalian' => 'required|numeric|min:0',
-        'payment_method' => 'required|string|max:255',
-        'id_member' => 'nullable|exists:members,id_member', // id_member opsional dan harus valid jika diisi
-    ]);
+    // Ambil data transaksi beserta relasi
+    $transaksi = TransaksiPenjualan::with(['pegawai', 'member.levelmember', 'detailtransaksi.produk'])
+        ->where('kode_transaksi', $kode_transaksi)
+        ->firstOrFail();
 
-    // Temukan transaksi berdasarkan kode_transaksi
-    $transaksi = TransaksiPenjualan::where('kode_transaksi', $kode_transaksi)->firstOrFail();
+    // Hitung subtotal dari detail transaksi
+    $subtotal = $transaksi->detailtransaksi->sum('subtotal');
 
-    // Perbarui data transaksi tanpa mengubah kode_transaksi
-    $transaksi->update([
-        'id_pegawai' => $validatedData['id_pegawai'],
-        'tanggal_transaksi' => $validatedData['tanggal_transaksi'],
-        'total_harga' => $validatedData['total_harga'],
-        'nominal_uang_diterima' => $validatedData['nominal_uang_diterima'],
-        'nominal_uang_kembalian' => $validatedData['nominal_uang_kembalian'],
-        'payment_method' => $validatedData['payment_method'],
-        'id_member' => $validatedData['id_member'] ?? null, // Simpan null jika id_member tidak diisi
-    ]);
-
-    // Redirect dengan pesan sukses
-    return redirect()->route('transaksipenjualan.index')->with('success', 'Transaksi berhasil diperbarui!');
+    // Ambil diskon berdasarkan level member
+    $diskonRate = 0;
+    if ($transaksi->member && $transaksi->member->id_level_member) {
+        switch ($transaksi->member->id_level_member) {
+            case 1: $diskonRate = 0.05; break; // Bronze
+            case 2: $diskonRate = 0.10; break; // Silver
+            case 3: $diskonRate = 0.15; break; // Gold
+        }
     }
 
-    public function cetak($kode_transaksi)
-    {
-        // Ambil data transaksi dengan relasi pegawai
-        $transaksi = TransaksiPenjualan::where('kode_transaksi', $kode_transaksi)
-            ->with('pegawai')
-            ->firstOrFail();
+    // Hitung total diskon
+    $totalDiskon = $subtotal * $diskonRate;
 
-        // Load view cetak dan passing data transaksi
-        $pdf = Pdf::loadView('transaksipenjualan.cetak', compact('transaksi'))
-            ->setPaper('a4', 'portrait'); // Atur ukuran kertas dan orientasi
+    // Hitung total setelah diskon
+    $totalSetelahDiskon = $subtotal - $totalDiskon;
 
-        // Unduh sebagai PDF
-        return $pdf->download("Nota_Transaksi_{$kode_transaksi}.pdf");
-    }
+    // Hitung poin yang diterima
+    $poinDiterima = floor($totalSetelahDiskon / 1000);
 
+    // Log untuk debugging
+    Log::info('Detail transaksi:', [
+        'subtotal' => $subtotal,
+        'diskonRate' => $diskonRate,
+        'totalDiskon' => $totalDiskon,
+        'totalSetelahDiskon' => $totalSetelahDiskon,
+        'poinDiterima' => $poinDiterima,
+    ]);
+
+    // Kirim data ke view
+    return Pdf::loadView('transaksipenjualan.cetak', [
+        'transaksi' => $transaksi,
+        'subtotal' => $subtotal,
+        'totalDiskon' => $totalDiskon, // Pastikan variabel ini dikirim
+        'totalSetelahDiskon' => $totalSetelahDiskon,
+        'poinDiterima' => $poinDiterima,
+    ])->download('nota-transaksi-' . $transaksi->kode_transaksi . '.pdf');
 }
 
+public function detail($kode_transaksi)
+{
+    $transaksi = TransaksiPenjualan::with(['pegawai', 'member.levelmember'])
+        ->where('kode_transaksi', $kode_transaksi)
+        ->firstOrFail();
+
+    $detailtransaksi = DetailTransaksi::where('kode_transaksi', $kode_transaksi)
+        ->join('produk', 'detailtransaksi.id_produk', '=', 'produk.id_produk')
+        ->select('detailtransaksi.*', 'produk.nama_produk', 'produk.harga')
+        ->get();
+
+    // Hitung subtotal
+    $subtotal = $detailtransaksi->sum(function ($item) {
+        return $item->harga * $item->jumlah;
+    });
+
+    // Cek apakah member memiliki level
+    $diskonRate = 0;
+    if ($transaksi->member && $transaksi->member->id_level_member) {
+        switch ($transaksi->member->id_level_member) {
+            case 1: $diskonRate = 0.05; break; // Bronze
+            case 2: $diskonRate = 0.10; break; // Silver
+            case 3: $diskonRate = 0.15; break; // Gold
+        }
+    }
+
+    // Debug untuk memastikan nilai diskon
+    Log::info('Debug Member dan Diskon:', [
+        'member_id' => $transaksi->member->id_member ?? 'Tidak Ada Member',
+        'id_level_member' => $transaksi->member->id_level_member ?? 'Tidak Ada Level',
+        'diskonRate' => $diskonRate,
+    ]);
+
+    // Hitung total diskon
+    $totalDiskon = $subtotal * $diskonRate;
+
+    // Subtotal setelah diskon
+    $subtotalSetelahDiskon = $subtotal - $totalDiskon;
+
+    // Poin diterima
+    $poinDiterima = $subtotalSetelahDiskon > 0 ? floor($subtotalSetelahDiskon / 1000) : 0;
+
+    // Log untuk memastikan perhitungan
+    Log::info('Detail Transaksi:', [
+        'subtotal' => $subtotal,
+        'diskonRate' => $diskonRate,
+        'totalDiskon' => $totalDiskon,
+        'subtotalSetelahDiskon' => $subtotalSetelahDiskon,
+        'poinDiterima' => $poinDiterima,
+    ]);
+
+    return view('transaksipenjualan.detail', compact(
+        'transaksi', 'detailtransaksi', 'subtotal', 'totalDiskon', 'subtotalSetelahDiskon', 'poinDiterima'
+    ));
+}
+
+
+
+public function destroy($kodeTransaksi)
+{
+    $transaksi = TransaksiPenjualan::where('kode_transaksi', $kodeTransaksi)->firstOrFail();
+
+    // Hapus transaksi
+    $transaksi->delete();
+
+    return redirect()->route('transaksipenjualan.index')->with('success', 'Data transaksi berhasil dihapus!');
+}
+
+}

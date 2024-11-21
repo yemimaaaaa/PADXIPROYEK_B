@@ -85,13 +85,17 @@
           </div>
 
           <!-- Foto Stok -->
-          <div class="flex flex-col lg:col-span-2">
-            <label class="font-medium text-gray-700 mb-2">Foto Stok:</label>
-            <input 
-              class="border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500" 
-              type="file" 
-              name="foto_stok" />
-          </div>
+            <div class="flex flex-col lg:col-span-2">
+              <label class="font-medium text-gray-700 mb-2">Foto Stok:</label>
+              <input 
+                  class="border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                  type="file" 
+                  name="foto_stok" 
+                  required />
+              @error('foto_stok')
+                  <span class="text-red-500 text-sm mt-2">{{ $message }}</span>
+              @enderror
+            </div>
 
           <!-- Hidden Field for ID Pegawai -->
           <input type="hidden" name="id_pegawai" value="{{ auth()->user()->id_pegawai }}" />

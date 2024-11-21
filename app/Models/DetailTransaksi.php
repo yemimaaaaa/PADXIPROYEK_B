@@ -1,37 +1,32 @@
-<?php 
+<?php
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DetailTransaksi extends Model
 {
-    use SoftDeletes;
+    use HasFactory;
 
-    protected $table = 'detailtransaksi'; // Nama tabel custom
-    protected $primaryKey = 'id_detail_transaksi'; // Primary key custom
+    protected $table = 'detailtransaksi'; // Sesuaikan dengan nama tabel
+    protected $primaryKey = 'id_detail_transaksi'; // Sesuaikan jika primary key bukan "id"
 
     protected $fillable = [
-        'tanggal_penjualan',
-        'jumlah',              
-        'subtotal',    
         'kode_transaksi',
-        'id_produk'
+        'id_produk',
+        'jumlah',
+        'subtotal',
+        'tanggal_penjualan',
     ];
 
-    // Tidak perlu mendeklarasikan deleted_at sejak Laravel 8+
-    protected $dates = ['deleted_at'];
-
-    public $timestamps = true; // Mengaktifkan timestamps
-
-    // public function transaksipenjualan()
-    // {
-    //     return $this->belongsTo(TransaksiPenjualan::class, 'kode_pegawai');
-    // }
-
+    public function transaksi()
+    {
+        return $this->belongsTo(TransaksiPenjualan::class, 'kode_transaksi', 'kode_transaksi');
+    }
     public function produk()
     {
-        return $this->belongsTo(Produk::class, 'id_produk');
+        return $this->belongsTo(Produk::class, 'id_produk', 'id_produk');
     }
+
 }

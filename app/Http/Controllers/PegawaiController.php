@@ -54,10 +54,15 @@ class PegawaiController extends Controller
             'username' => 'required|string|max:255|unique:pegawai,username',
             'password' => 'required|string|min:6',
             'email' => 'required|email|unique:pegawai,email',
-            'no_hp' => 'required|string|max:14|unique:pegawai,no_hp',
+            'no_hp' => [
+                'required',
+                'regex:/^08[0-9]{7,}$/', // Harus diawali dengan 08 dan minimal 9 angka
+                'unique:pegawai,no_hp',
+            ],
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'id_role' => 'required|integer|exists:role,id_role',
         ]);
+        
 
         $fotoPath = '';
         // Proses foto jika diunggah
@@ -105,10 +110,16 @@ class PegawaiController extends Controller
             'nama' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:pegawai,username,' . $id . ',id_pegawai',
             'email' => 'required|email|unique:pegawai,email,' . $id . ',id_pegawai',
-            'no_hp' => 'required|string|max:14|unique:pegawai,no_hp,' . $id . ',id_pegawai',
+            'no_hp' => [
+                'required',
+                'regex:/^08[0-9]{7,}$/', // Harus diawali dengan 08 dan minimal 9 angka
+                'unique:pegawai,no_hp,' . $id . ',id_pegawai', // Unik kecuali milik pegawai ini
+            ],
             'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'id_role' => 'required|integer|exists:role,id_role',
-        ]);
+            ]);
+
+        
 
         // Temukan stok berdasarkan ID
         $pegawai = Pegawai::findOrFail($id);

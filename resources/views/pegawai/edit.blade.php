@@ -136,8 +136,12 @@
             <!-- No HP -->
             <div class="mb-4">
                 <label for="no_hp">No HP:</label>
-                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $pegawai->no_hp) }}" required>
+                <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $pegawai->no_hp ?? '') }}" placeholder="Masukkan nomor HP" required>
+                @error('no_hp')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+            
 
             <!-- Email -->
             <div class="mb-4">
