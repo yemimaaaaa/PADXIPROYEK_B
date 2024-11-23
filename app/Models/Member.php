@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Log;
 
 class Member extends Model
 {
@@ -54,4 +55,21 @@ class Member extends Model
     {
         return $this->hasMany(Member::class, 'id_level_member', 'id'); // Relasi ke anggota lain
     }
+    public function poins()
+    {
+        return $this->hasMany(Poin::class, 'id_member', 'id_member');
+    }
+     
+    public function updatePoin($poinDiterima)
+    {
+    $this->poin += $poinDiterima;
+    $this->save();
+
+    Log::info('Poin member diperbarui:', [
+        'id_member' => $this->id_member,
+        'poinDiterima' => $poinDiterima,
+        'totalPoin' => $this->poin,
+    ]);
+}
+
 }

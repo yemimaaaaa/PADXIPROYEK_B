@@ -24,4 +24,15 @@ class Poin extends Model
         'kode_transaksi',       
         'id_member',
     ];
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'id_member', 'id_member');
+    }    
+
+    public function transaksi()
+    {
+        return $this->belongsTo(TransaksiPenjualan::class, 'kode_transaksi', 'kode_transaksi');
+    }
+    
 }

@@ -12,6 +12,10 @@ use App\Http\Controllers\TransaksiPenjualanController;
 use App\Http\Controllers\LaporanTransaksiController;
 use App\Http\Controllers\PoinMemberController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\SearchController;
+
+Route::get('/member/search', [SearchController::class, 'search'])->name('member.search');
+
 
 Route::get('/', [LandingPageController::class, 'index'])->name('landingpage');
 
@@ -32,8 +36,8 @@ Route::get('/', function () {
 });
 
 // Public member routes
-Route::get('/member-list', [MemberController::class, 'showAllMembers'])->name('member.list');
-Route::get('/cek-member', [PublicMemberController::class, 'searchProfile'])->name('public.member.cekmember');
+// Route::get('/member-list', [MemberController::class, 'showAllMembers'])->name('member.list');
+// Route::get('/cek-member', [PublicMemberController::class, 'searchProfile'])->name('public.member.cekmember');
 
 
 // Authentication routes
@@ -126,4 +130,6 @@ Route::middleware('auth')->group(function () {
 
     // Poin routes
     Route::get('/poinmember', [PoinMemberController::class, 'index'])->name('poinmember.index');
+    Route::post('/poinmember/{id}', [PoinMemberController::class, 'update'])->name('poin');
+
 });
