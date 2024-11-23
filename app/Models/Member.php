@@ -55,11 +55,12 @@ class Member extends Model
     {
         return $this->hasMany(Member::class, 'id_level_member', 'id'); // Relasi ke anggota lain
     }
-    public function poins()
+
+    public function poin()
     {
         return $this->hasMany(Poin::class, 'id_member', 'id_member');
     }
-     
+         
     public function updatePoin($poinDiterima)
     {
     $this->poin += $poinDiterima;

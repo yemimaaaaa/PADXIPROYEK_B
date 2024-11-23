@@ -53,7 +53,7 @@
             <div class="row align-items-center mt-4 mb-3">
                 <div class="col text-start">
                     <form class="d-flex" action="/member/search" method="GET" style="justify-content: flex-start;">
-                        <input class="form-control me-2" type="search" name="query" placeholder="Search Member" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search Data Member" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -75,21 +75,23 @@
                                         <strong>Periode Awal:</strong> {{ $member->periode_awal }} <br>
                                         <strong>Periode Akhir:</strong> {{ $member->periode_akhir }} <br>
                                         <strong>Level Member:</strong> {{ $member->nama_level }}
-                                        {{-- <div class="mb-1">📱 {{ $member->no_hp }}</div>
-                                        <div class="mb-1">🗓️ {{ $member->periode_awal }}</div>
-                                        <div class="mb-1">📅 {{ $member->periode_akhir }}</div>
-                                        <div>⭐ Level {{ $member->id_level_member }}</div> --}}
                                     </p>
                                 </div>
                                 <div class="d-flex justify-content-center mt-3 mb-3">
                                     <a href="{{ route('member.edit', ['id' => $member->id_member]) }}" class="btn btn-outline-primary btn-sm me-2">Edit</a>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="showDeleteModal('{{ $member->id_member }}')">Delete</button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="showDeleteModal('{{ $member->id_member }}')">Delete</button>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
+            
+                <!-- Pagination -->
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $members->links('pagination::bootstrap-5') }}
+                </div>
             </div>
+            
 
             <!-- Modal Konfirmasi Hapus -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

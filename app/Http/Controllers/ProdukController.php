@@ -9,15 +9,23 @@ use Illuminate\Support\Str;
 
 class ProdukController extends Controller
 {
-    public function index()
-{
-    // Mengambil semua data produk dari database dan mengurutkan berdasarkan created_at secara menurun
-    $produks = Produk::orderBy('created_at', 'desc')->get(); 
-
-    // Mengembalikan tampilan dengan data produk
-    return view('produk.index', compact('produks'));
-}
-
+    public function index(Request $request)
+    {
+        // Mendapatkan input pencarian dari request
+        $query = $request->input('query');
+    
+        // Query untuk mengambil data produk dengan filter dan paginasi
+        $produks = Produk::when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('nama_produk', 'like', "%$query%")
+                             ->orWhere('jenis_produk', 'like', "%$query%");
+            })
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan waktu dibuat
+            ->paginate(8); // Paginasi: 8 produk per halaman
+    
+        // Mengembalikan tampilan dengan data produk dan query pencarian
+        return view('produk.index', compact('produks', 'query'));
+    }
+    
     public function search(Request $request)
     {
         $query = $request->input('query');

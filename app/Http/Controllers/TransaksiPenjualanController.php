@@ -21,13 +21,14 @@ class TransaksiPenjualanController extends Controller
 {
     public function index()
     {
-        // Eager load the pegawai relationship to avoid N+1 query problem
+        // Gunakan paginate dan eager load untuk mengoptimalkan query
         $transaksipenjualans = TransaksiPenjualan::with(['pegawai', 'member'])
-        ->orderBy('created_at', 'desc')
-        ->get();
-
+            ->orderBy('created_at', 'desc')
+            ->paginate(10); // Menggunakan paginasi
+    
         return view('transaksipenjualan.index', compact('transaksipenjualans'));
     }
+    
 
     public function search(Request $request)
     {
@@ -143,36 +144,24 @@ class TransaksiPenjualanController extends Controller
     
             // Hitung poin yang diterima
             $poinDiterima = floor($subtotalSetelahDiskon / 1000); // Hitung poin berdasarkan subtotal setelah diskon
-    
-            // if ($member && $poinDiterima > 0) {
-            //     Poin::create([
-            //         'tanggal' => now(),
-            //         'total_poin' => $poinDiterima,
-            //         'kode_transaksi' => $transaksipenjualan->kode_transaksi,
-            //         'id_member' => $member->id_member,
-            //     ]);
-    
-            //     Log::info('Poin berhasil ditambahkan:', [
-            //         'id_member' => $member->id_member,
-            //         'poin_tambahan' => $poinDiterima,
-            //     ]);
-            // }
-
+            
             if ($validatedData['id_member']) {
                 $member = Member::with('poin')->findOrFail($validatedData['id_member']);
-    
+                
+                // Simpan poin ke tabel Poin
                 Poin::create([
                     'id_member' => $member->id_member,
-                    'total_poin' => $validatedData['poin_diterima'],
+                    'total_poin' => $poinDiterima, // Menggunakan variabel poinDiterima yang telah dihitung
                     'kode_transaksi' => $transaksipenjualan->kode_transaksi,
                     'tanggal' => now(),
                 ]);
-    
+            
                 Log::info('Poin berhasil ditambahkan:', [
                     'id_member' => $member->id_member,
-                    'poin_diterima' => $validatedData['poin_diterima'],
+                    'poin_diterima' => $poinDiterima, // Log juga menggunakan poinDiterima
                 ]);
             }
+            
     
             DB::commit();
             Log::info('Transaksi berhasil disimpan.');
@@ -308,5 +297,7 @@ public function destroy($kodeTransaksi)
 
     return redirect()->route('transaksipenjualan.index')->with('success', 'Data transaksi berhasil dihapus!');
 }
+
+
 
 }

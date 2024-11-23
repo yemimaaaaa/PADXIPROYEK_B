@@ -6,60 +6,20 @@ use App\Models\Member;
 
 class PoinMemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = Member::withSum('poins', 'total_poin') // Hitung total poin untuk setiap member
-            ->orderBy('nama', 'asc')
+        // Ambil query pencarian jika ada
+        $query = $request->input('query');
+
+        // Filter berdasarkan pencarian atau ambil semua data
+        $members = Member::withSum('poin as poins_sum_total_poin', 'total_poin')
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('id_member', 'like', "%$query%")
+                    ->orWhere('nama', 'like', "%$query%");
+            })
+            ->orderBy('id_member', 'asc') // Urutkan berdasarkan ID Member
             ->get();
-    
-        return view('poinmember.index', compact('members'));
+
+        return view('poinmember.index', compact('members', 'query'));
     }
-    
-    // Update poin member secara manual
-    public function update(Request $request, $id_member)
-    {
-        // Validasi input
-        $request->validate([
-            'poin' => 'required|integer|min:0',
-        ]);
-
-        // Cari member berdasarkan ID
-        $member = Member::findOrFail($id_member);
-
-        // Update poin member
-        $member->poin = $request->poin;
-        $member->save();
-
-        return redirect()->route('poinmember.index')->with('success', 'Poin member berhasil diperbarui.');
-    }
-
-    // Fungsi untuk menambahkan poin otomatis setelah transaksi
-//     public function tambahPoinMember($id_member, $poinDiterima)
-// {
-//     $member = Member::find($id_member);
-
-//     if ($member) {
-//         // Ambil atau buat entri poin
-//         $poin = Poin::firstOrNew(['id_member' => $id_member]);
-
-//         // Pastikan total_poin terinisialisasi
-//         $poin->total_poin = ($poin->total_poin ?? 0) + $poinDiterima;
-//         $poin->tanggal = now();
-//         $poin->save();
-
-//         // Update poin langsung di tabel Member
-//         $member->poin += $poinDiterima;
-//         $member->save();
-
-//         Log::info('Poin berhasil ditambahkan:', [
-//             'id_member' => $id_member,
-//             'poinDiterima' => $poinDiterima,
-//             'totalPoin' => $poin->total_poin,
-//         ]);
-//     } else {
-//         Log::warning('Member tidak ditemukan:', ['id_member' => $id_member]);
-//     }
-// }
-
-    
 }

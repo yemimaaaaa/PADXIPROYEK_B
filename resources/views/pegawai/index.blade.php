@@ -46,7 +46,7 @@
         <div class="row align-items-center mt-4 mb-3">
             <div class="col text-start">
                 <form class="d-flex" action="/pegawai/search" method="GET" style="justify-content: flex-start;">
-                    <input class="form-control me-2" type="search" name="query" placeholder="Search Pegawai" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search Data Pegawai" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>

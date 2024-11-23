@@ -35,66 +35,72 @@
         <div class="row align-items-center mb-3">
             <div class="col-md-6">
                 <form class="d-flex" action="/transaksipenjualan/search" method="GET">
-                    <input class="form-control me-2" type="search" name="query" placeholder="Search transaksi..." aria-label="Search" value="{{ request('query') }}">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search Data Transaksi" aria-label="Search" value="{{ request('query') }}">
                     <button class="btn btn-success" type="submit">Search</button>
                 </form>
             </div>
         </div>
 
-        <!-- Transaksi Table -->
-        <table class="table table-bordered table-striped shadow-sm bg-white">
-            <thead class="table-primary">
-                <tr>
-                    <th>No.</th>
-                    <th>Tanggal Penjualan</th>
-                    <th>Nominal Uang Diterima</th>
-                    <th>Nominal Uang Kembalian</th>
-                    <th>Total</th>
-                    <th>Payment Method</th>
-                    <th>Pegawai</th>
-                    <th>Member</th>
-                    <th class="text-center">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($transaksipenjualans as $index => $transaksipenjualan)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $transaksipenjualan->tanggal_penjualan }}</td>
-                    <td>Rp{{ number_format($transaksipenjualan->nominal_uang_diterima, 0, ',', '.') }}</td>
-                    <td>Rp{{ number_format($transaksipenjualan->nominal_uang_kembalian, 0, ',', '.') }}</td>
-                    <td>Rp{{ number_format($transaksipenjualan->total, 0, ',', '.') }}</td>
-                    <td>{{ $transaksipenjualan->payment_method }}</td>
-                    <td>{{ $transaksipenjualan->pegawai ? $transaksipenjualan->pegawai->nama : 'N/A' }}</td>
-                    <td>{{ $transaksipenjualan->member ? $transaksipenjualan->member->nama : 'N/A' }}</td>
-                    <td class="text-center">
-                        <!-- Detail Button -->
-                        <a href="{{ route('transaksipenjualan.detail', ['kode_transaksi' => $transaksipenjualan->kode_transaksi]) }}" 
-                           class="btn btn-warning btn-sm shadow-sm d-flex align-items-center">
-                            <i class="bi bi-info-circle me-1"></i> Detail
-                        </a>
+       <!-- Transaksi Table -->
+<table class="table table-bordered table-striped shadow-sm bg-white">
+    <thead class="table-primary">
+        <tr>
+            <th>No.</th>
+            <th>Tanggal Penjualan</th>
+            <th>Nominal Uang Diterima</th>
+            <th>Nominal Uang Kembalian</th>
+            <th>Total</th>
+            <th>Payment Method</th>
+            <th>Pegawai</th>
+            <th>Member</th>
+            <th class="text-center">Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($transaksipenjualans as $index => $transaksipenjualan)
+        <tr>
+            <td>{{ $loop->iteration + ($transaksipenjualans->currentPage() - 1) * $transaksipenjualans->perPage() }}</td>
+            <td>{{ $transaksipenjualan->tanggal_penjualan }}</td>
+            <td>Rp{{ number_format($transaksipenjualan->nominal_uang_diterima, 0, ',', '.') }}</td>
+            <td>Rp{{ number_format($transaksipenjualan->nominal_uang_kembalian, 0, ',', '.') }}</td>
+            <td>Rp{{ number_format($transaksipenjualan->total, 0, ',', '.') }}</td>
+            <td>{{ $transaksipenjualan->payment_method }}</td>
+            <td>{{ $transaksipenjualan->pegawai ? $transaksipenjualan->pegawai->nama : 'N/A' }}</td>
+            <td>{{ $transaksipenjualan->member ? $transaksipenjualan->member->nama : 'N/A' }}</td>
+            <td class="text-center">
+                <!-- Detail Button -->
+                <a href="{{ route('transaksipenjualan.detail', ['kode_transaksi' => $transaksipenjualan->kode_transaksi]) }}" 
+                   class="btn btn-warning btn-sm shadow-sm d-flex align-items-center">
+                    <i class="bi bi-info-circle me-1"></i> Detail
+                </a>
 
-                        
-                        <!-- Cetak Button -->
-                        <a href="/transaksipenjualan/{{ $transaksipenjualan->kode_transaksi }}/cetak" 
-                           class="btn btn-primary btn-sm shadow-sm d-flex align-items-center mt-1">
-                            <i class="bi bi-printer me-1"></i> Cetak
-                        </a>
+                <!-- Cetak Button -->
+                <a href="/transaksipenjualan/{{ $transaksipenjualan->kode_transaksi }}/cetak" 
+                   class="btn btn-primary btn-sm shadow-sm d-flex align-items-center mt-1">
+                    <i class="bi bi-printer me-1"></i> Cetak
+                </a>
 
-                        <!-- Hapus Button -->
-                        <button 
-                            type="button" 
-                            class="btn btn-danger btn-sm shadow-sm d-flex align-items-center mt-1"
-                            onclick="showDeleteModal('{{ $transaksipenjualan->kode_transaksi }}')">
-                            <i class="bi bi-trash me-1"></i> Hapus
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
+                <!-- Hapus Button -->
+                <button 
+                    type="button" 
+                    class="btn btn-danger btn-sm shadow-sm d-flex align-items-center mt-1"
+                    onclick="showDeleteModal('{{ $transaksipenjualan->kode_transaksi }}')">
+                    <i class="bi bi-trash me-1"></i> Hapus
+                </button>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="9" class="text-center">Tidak ada data transaksi.</td>
+        </tr>
+        @endforelse
+    </tbody>
         </table>
-    </div>
 
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-4">
+            {{ $transaksipenjualans->links('pagination::bootstrap-5') }}
+        </div>
 
     <!-- Modal Konfirmasi Hapus -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

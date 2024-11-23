@@ -65,7 +65,6 @@ class TransaksiPenjualan extends Model
         return $this->hasMany(DetailTransaksi::class, 'kode_transaksi', 'kode_transaksi');
     }
     
-
     public function produk()
     {
         return $this->belongsTo(Produk::class, 'id_produk');

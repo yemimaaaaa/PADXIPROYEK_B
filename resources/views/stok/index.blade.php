@@ -45,7 +45,7 @@
                 <div class="row align-items-center mt-4 mb-3">
                     <div class="col text-start">
                         <form class="d-flex" action="/stok/search" method="GET">
-                            <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" value="{{ request('query') }}">
+                            <input class="form-control me-2" type="search" name="query" placeholder="Search Data Stok" aria-label="Search" value="{{ request('query') }}">
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     </div>
@@ -69,7 +69,7 @@
                                             <strong>ID Pegawai:</strong> {{ $stok->id_pegawai }}
                                         </p>
                                         <div class="d-flex justify-content-center mt-3 gap-2">
-                                            <a href="{{ route('stok.edit', ['id' => $stok->id_stok]) }}" class="btn btn-outline-primary btn-sm me-2">Edit</a>
+                                            <a href="{{ route('stok.edit', ['id' => $stok->id_stok]) }}" class="btn btn-outline-primary btn-sm">Edit</a>
                                             <button class="btn btn-outline-danger btn-sm" onclick="showDeleteModal({{ $stok->id_stok }})">Delete</button>
                                         </div>
                                     </div>
@@ -77,7 +77,12 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
+                
+                    <!-- Pagination -->
+                    <div class="mt-4 d-flex justify-content-center">
+                        {{ $stoks->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>                
             </div>
 
             <!-- Modal Konfirmasi Hapus -->

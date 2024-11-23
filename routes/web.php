@@ -51,6 +51,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 // Group routes that require authentication
 Route::middleware('auth')->group(function () {
     // Dashboard route (protected by auth middleware)
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Product routes
@@ -127,9 +128,16 @@ Route::middleware('auth')->group(function () {
 
     // Report routes
     Route::get('/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporantransaksi.index');
+    Route::get('/laporantransaksi/search', [LaporanTransaksiController::class, 'search'])->name('laporantransaksi.search');
+    Route::get('/laporantransaksi/{kode_transaksi}/detail', [LaporanTransaksiController::class, 'detail'])->name('laporantransaksi.detail');
+    Route::get('/laporantransaksi/{kode_transaksi}/cetak', [LaporanTransaksiController::class, 'detail'])->name('laporantransaksi.cetak');
+    Route::get('/laporantransaksi/export/excel', [LaporanTransaksiController::class, 'exportExcel'])->name('laporantransaksi.export.excel');
+    Route::get('/laporantransaksi/export/pdf', [LaporanTransaksiController::class, 'exportPdf'])->name('laporantransaksi.export.pdf');
+
 
     // Poin routes
     Route::get('/poinmember', [PoinMemberController::class, 'index'])->name('poinmember.index');
-    Route::post('/poinmember/{id}', [PoinMemberController::class, 'update'])->name('poin');
+    Route::post('/poinmember/search', [PoinMemberController::class, 'search'])->name('poinmember.search');
+    Route::get('/poinmember/{id_member}/detail', [PoinMemberController::class, 'detail'])->name('poinmember.detail');
 
 });

@@ -10,14 +10,21 @@ use Carbon\Carbon;
 
 class StokController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data stok dari database
-        $stoks = Stok::orderBy('created_at', 'desc')->get(); 
-
-
-        // Mengembalikan tampilan dengan data stok
-        return view('stok.index', compact('stoks'));
+        // Mendapatkan input pencarian dari request
+        $query = $request->input('query');
+    
+        // Mengambil data stok dengan filter dan paginasi
+        $stoks = Stok::when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('nama_stok', 'like', "%$query%")
+                             ->orWhere('jenis_stok', 'like', "%$query%");
+            })
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan waktu dibuat
+            ->paginate(8); // Batasi 8 stok per halaman
+    
+        // Mengembalikan tampilan dengan data stok dan query pencarian
+        return view('stok.index', compact('stoks', 'query'));
     }
 
     public function search(Request $request)
@@ -134,5 +141,4 @@ public function destroy($id)
 
     return redirect('/stok')->with('success', 'Stok berhasil dihapus!');
 }
-
 }

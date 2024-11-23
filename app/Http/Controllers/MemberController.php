@@ -9,14 +9,25 @@ use Carbon\Carbon;
 
 class MemberController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua data produk dari database
-        $members = Member::orderBy('created_at', 'desc')->get(); 
-
-        // Mengembalikan tampilan dengan data produk
-        return view('member.index', compact('members'));
+        // Mendapatkan input pencarian dari request
+        $query = $request->input('query');
+    
+        // Query untuk mengambil data member dengan filter dan paginasi
+        $members = Member::with('levelmember') // Pastikan relasi 'level' didefinisikan di model Member
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where('nama', 'like', "%$query%")
+                    ->orWhere('no_hp', 'like', "%$query%");
+            })
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan waktu dibuat
+            ->paginate(8); // Batasi 8 data per halaman
+    
+        // Mengembalikan tampilan dengan data member dan query pencarian
+        return view('member.index', compact('members', 'query'));
     }
+    
+
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -196,20 +207,6 @@ class MemberController extends Controller
             // Redirect dengan pesan sukses
             return redirect()->route('member.index')->with('success', 'Member berhasil dihapus!');
         }
-
-        // public function cekmember(Request $request)
-        // {
-        //     $keyword = $request->input('nama');
-        //     $member = Member::where('nama', 'LIKE', "%{$keyword}%")->first();
-        
-        //     if ($member) {
-        //         // Jika data ditemukan, kembalikan view dengan data
-        //         return view('member.profile', compact('member'));
-        //     }
-        
-        //     // Jika tidak ditemukan, kembalikan error ke halaman pencarian
-        //     return redirect()->back()->with('error', 'Member tidak ditemukan.');
-        // }
         
     }
     

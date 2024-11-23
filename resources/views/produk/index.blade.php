@@ -44,7 +44,7 @@
         <div class="row align-items-center mt-4 mb-3">
             <div class="col text-start">
                 <form class="d-flex" action="/produk/search" method="GET" style="justify-content: flex-start;">
-                    <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search Data Produk" aria-label="Search" style="width: 200px;" value="{{ request('query') }}">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -55,7 +55,7 @@
 
         <div class="container text-center">
             <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-                @foreach($produks as $index => $produk)
+                @foreach($produks as $produk)
                     <div class="col">
                         <div class="card h-100">
                             <img src="{{ asset('/'. $produk['foto_produk']) }}" alt="{{ $produk['nama_produk'] }}" class="card-img-top">
@@ -75,8 +75,13 @@
                     </div>
                 @endforeach
             </div>
+        
+            <!-- Pagination -->
+            <div class="mt-4 d-flex justify-content-center">
+                {{ $produks->links('pagination::bootstrap-5') }}
+            </div>
         </div>
-
+        
         <!-- Modal Konfirmasi Hapus -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
