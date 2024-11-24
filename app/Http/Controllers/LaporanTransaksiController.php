@@ -168,4 +168,60 @@ public function exportExcel(Request $request)
             // Gunakan download() untuk langsung mengunduh PDF
             return $pdf->download("Nota_Transaksi_{$kode_transaksi}.pdf");
         }
+
+        public function grafik(Request $request)
+{
+    $query = TransaksiPenjualan::query();
+
+    // Filter untuk grafik garis (penjualan harian)
+    if ($request->id_member) {
+        $query->where('id_member', $request->id_member);
+    }
+
+    if ($request->levelmember) {
+        $query->whereHas('member', function ($q) use ($request) {
+            $q->where('levelmember', $request->levelmember);
+        });
+    }
+
+    if ($request->start_date && $request->end_date) {
+        $query->whereBetween('tanggal_penjualan', [$request->start_date, $request->end_date]);
+    }
+
+    if ($request->id_produk) {
+        $query->whereHas('produk', function ($q) use ($request) {
+            $q->where('id_produk', $request->id_produk);
+        });
+    }
+
+    // Filter bulan untuk grafik garis
+    $selectedMonth = $request->input('month') ?? date('m'); // Default ke bulan saat ini jika tidak dipilih
+    $query->whereMonth('tanggal_penjualan', $selectedMonth);
+
+    // Data untuk grafik garis (penjualan harian)
+    $laporanData = $query->selectRaw('DATE(tanggal_penjualan) as tanggal, SUM(total) as total_penjualan')
+        ->groupBy('tanggal')
+        ->orderBy('tanggal')
+        ->get();
+
+    $labels = $laporanData->pluck('tanggal')->toArray(); // Tanggal untuk label grafik
+    $data = $laporanData->pluck('total_penjualan')->toArray(); // Total penjualan untuk grafik
+
+    // Filter bulan untuk chart pie
+    $pieData = DetailTransaksi::join('produk', 'detailtransaksi.id_produk', '=', 'produk.id_produk')
+        ->join('transaksipenjualan', 'detailtransaksi.kode_transaksi', '=', 'transaksipenjualan.kode_transaksi')
+        ->selectRaw('produk.nama_produk as nama_produk, SUM(detailtransaksi.jumlah) as jumlah_terjual')
+        ->whereMonth('transaksipenjualan.tanggal_penjualan', $selectedMonth)
+        ->groupBy('produk.nama_produk')
+        ->orderBy('jumlah_terjual', 'desc')
+        ->get();
+
+    $pieLabels = $pieData->pluck('nama_produk')->toArray();
+    $pieValues = $pieData->pluck('jumlah_terjual')->toArray();
+
+    $members = \App\Models\Member::all(); // Untuk filter member
+    $products = \App\Models\Produk::all(); // Untuk filter produk
+
+    return view('laporantransaksi.grafik', compact('labels', 'data', 'pieLabels', 'pieValues', 'members', 'products', 'selectedMonth'));
+}
 }

@@ -95,6 +95,24 @@
     <!-- Main Content -->
     <div class="main-content container">
         <h1 class="mt-4">Dashboard</h1>
+        
+        <div class="d-flex justify-content-end align-items-center mb-4"> <!-- Tambahkan kelas mb-4 -->
+            <div class="dropdown border rounded shadow p-2 bg-light">
+                <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="Pegawai" width="30" height="30" class="rounded-circle me-2">
+                    <span class="d-none d-sm-inline mx-1">({{ auth()->check() ? auth()->user()->nama : 'Guest' }})</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-dark">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+       
 
         <!-- Dashboard Cards -->
         <div class="card-container">

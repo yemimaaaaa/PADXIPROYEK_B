@@ -9,21 +9,23 @@
 
         <!-- Top Bar -->
         <div class="d-flex flex-column align-items-end mb-4">
-            <!-- User Dropdown -->
-            <div class="dropdown mb-3">
+           <!-- User Dropdown -->
+           <div class="d-flex justify-content-end align-items-center mb-4"> <!-- Tambahkan kelas mb-4 -->
+            <div class="dropdown border rounded shadow p-2 bg-light">
                 <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="Pegawai" width="40" height="40" class="rounded-circle me-2">
-                    <span class="fw-bold">{{ auth()->check() ? auth()->user()->nama : 'Guest' }}</span>
+                    <img src="https://github.com/mdo.png" alt="Pegawai" width="30" height="30" class="rounded-circle me-2">
+                    <span class="d-none d-sm-inline mx-1">({{ auth()->check() ? auth()->user()->nama : 'Guest' }})</span>
                 </a>
-                <ul class="dropdown-menu shadow dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end shadow">
                     <li>
-                        <form action="{{ route('logout') }}" method="POST">
+                        <form action="{{ route('logout') }}" method="POST" class="m-0">
                             @csrf
-                            <button type="submit" class="dropdown-item">Logout</button>
+                            <button type="submit" class="dropdown-item text-dark">Logout</button>
                         </form>
                     </li>
                 </ul>
             </div>
+        </div>
 
             <!-- Create Transaksi Button -->
             <a href="{{ route('transaksipenjualan.create') }}" class="btn btn-primary">

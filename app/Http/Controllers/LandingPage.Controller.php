@@ -2,18 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Produk;
-
-class LandingPageController extends Controller
-{
-    public function index()
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+    
+    class LandingPageController extends Controller
     {
-        // Pastikan kolom 'jenis_produk' ada di tabel produk
-        $beverages = Produk::where('jenis_produk', 'beverages')->get();
-        $desserts = Produk::where('jenis_produk', 'desserts')->get();
-
-        // Kirim data ke view landingpage.blade.php
-        return view('landingpage', compact('beverages', 'desserts'));
-    }
+        public function showLandingPage()
+        {
+            try {
+                // Query untuk produk terlaris
+                $produks = DB::table('detailtransaksi')
+                    ->join('produk', 'detailtransaksi.id_produk', '=', 'produk.id_produk')
+                    ->select(
+                        'produk.id_produk',
+                        'produk.nama_produk',
+                        'produk.foto_produk',
+                        'produk.harga',
+                        'produk.deskripsi_produk',
+                        DB::raw('SUM(detailtransaksi.jumlah) as total_terjual')
+                    )
+                    ->groupBy(
+                        'produk.id_produk',
+                        'produk.nama_produk',
+                        'produk.foto_produk',
+                        'produk.harga',
+                        'produk.deskripsi_produk'
+                    )
+                    ->orderByDesc('total_terjual')
+                    ->limit(10)
+                    ->get();
+    
+                // Log untuk debugging
+                Log::info('Hasil query produk terlaris:', ['produks' => $produks]);
+    
+                return view('landing', ['produks' => $produks]);
+            } catch (\Exception $e) {
+                Log::error('Kesalahan saat mengambil data produk:', ['error' => $e->getMessage()]);
+                return view('landing')->with('error', 'Terjadi kesalahan saat memuat data.');
+            }
+        }
 }
+

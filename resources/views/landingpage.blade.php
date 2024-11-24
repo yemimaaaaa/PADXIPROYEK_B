@@ -154,140 +154,38 @@
      </a> -->
     </div>
    </div>
-  </section>
-  <!-- Special Coffee Section -->
-  <section class="bg-blue-650 py-12">
+
+<!-- Top Products Section -->
+<section class="bg-white py-12">
    <div class="container mx-auto text-center">
-    <h2 class="text-4xl font-bold mb-8" style="font-family: 'Alkalami', cursive;">
-     Our Best Seller Beverages
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-     <div class="bg-white p-6 rounded-lg shadow-lg">
-      <img alt="Americano Pure Grades" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/caramel.jpg" width="200"/>
-      <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;">
-       Caramel Macchiato
-      </h3>
-      <p class="mb-4">
-        Minuman kopi yang sangat populer, terutama bagi mereka yang menyukai perpaduan rasa manis, pahit, dan creamy. Caramel Macchiato terlihat sangat menarik dengan lapisan-lapisan yang berbeda.
-      </p>
-      <p class="text-xl font-bold mb-4">
-       Rp32.000,00
-      </p>
-      <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-       Order Now
-      </a> -->
-     </div>
-     <div class="bg-white p-6 rounded-lg shadow-lg">
-      <img alt="Guatemala Coffee" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/latte.jpg" width="200"/>
-      <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;" >
-       Latte
-      </h3>
-      <p class="mb-4">
-      Latte dikenal dengan rasanya yang lembut dan creamy, serta lapisan busa tipis di bagian atasnya yang sering digunakan untuk membuat latte art.
-      </p>
-      <p class="text-xl font-bold mb-4">
-       Rp 25.000,00
-      </p>
-      <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-       Order Now
-      </a> -->
-     </div>
-     <div class="bg-white p-6 rounded-lg shadow-lg">
-      <img alt="Kenya Coffee" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/americano0.jpg" width="200"/>
-      <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;" >
-       Americano
-      </h3>
-      <p class="mb-4">
-      Minuman ini memiliki rasa yang lebih ringan dibandingkan espresso murni, sehingga cocok bagi mereka yang tidak terlalu suka dengan rasa pahit yang kuat.
-      </p>
-      <p class="text-xl font-bold mb-4">
-       Rp 20.000,00
-      </p>
-      <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-       Order Now
-      </a> -->
-     </div>
-    </div>
-   </div>
-  </section>
-  <!-- dessert favorite Section -->
-  <section class="bg-gray-100 py-12">
-   <div class="container mx-auto text-center">
-      <h2 class="text-4xl font-bold mb-8" style="font-family: 'Alkalami', cursive;">
-         Our Best Seller Dessert 
-      </h2>
-      <div class="flex justify-center mb-8"> 
-         <!-- <a class="text-gray-700 mx-2" href="#">
-          Soups
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Wraps
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Sandwiches
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Smoothie &amp; Frappes
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Doughnuts &amp; Pastries
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Cookies
-         </a>
-         <a class="text-gray-700 mx-2" href="#">
-          Coffee Tea &amp; Chai
-         </a> -->
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <img alt="Veggie Italian" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/cinnamonroll.jpg" width="200"/>
-            <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;">
-               Cinnamon Roll
-            </h3>
-            <p class="mb-4">
-               Cinnamon roll atau roti gulung kayu manis adalah jenis pastry manis yang sangat populer. Roti ini dikenal karena aroma kayu manis yang khas dan rasa manisnya yang lezat.
-            </p>
-            <p class="text-xl font-bold mb-4">
-               Rp 35.000,00
-            </p>
-            <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-               Order Now
-            </a> -->
-         </div>
-         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <img alt="Chipotle Chicken Avocado" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/croissant2.jpg" width="200"/>
-            <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;">
-               Croissant
-            </h3>
-            <p class="mb-4">
-               Kue kering yang berasal dari Prancis, bentuknya yang khas menyerupai bulan sabit, itulah sebabnya dinamakan Croissant. Kue ini sangat populer karena teksturnya yang renyah dan berlapis-lapis, serta rasanya yang gurih dan sedikit manis.
-            </p>
-            <p class="text-xl font-bold mb-4">
-               Rp 15.000,00
-            </p>
-            <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-               Order Now
-            </a> -->
-         </div>
-         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <img alt="BLT Sandwich Detail" class="w-full h-60 object-cover mb-4 rounded-lg" height="200" src="/cheesecake.jpg" width="200"/>
-            <h3 class="text-xl font-bold mb-2" style="font-family: 'Allerta', sans-serif;">
-               Cheesecake
-            </h3>
-            <p class="mb-4">
-               Kue yang memiliki rasa manis dan lembut, dengan bahan utama keju. Teksturnya yang lembut dan creamy, serta rasa keju yang gurih, membuat cheesecake menjadi salah satu dessert yang paling digemari di dunia.
-            </p>
-            <p class="text-xl font-bold mb-4">
-               Rp 35.000,00
-            </p>
-            <!-- <a class="bg-orange-500 text-white py-2 px-4 rounded-full" href="#">
-               Order Now
-            </a> -->
-         </div>
-      </div>
+       <h2 class="text-4xl font-bold mb-8">Top 10 Best-Selling Products</h2>
+               @if(session('error'))
+               <div class="bg-red-500 text-white p-4 rounded mb-4">
+                  {{ session('error') }}
+               </div>
+            @endif
+            
+            @if(!empty($produks) && count($produks) > 0)
+               <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  @foreach($produks as $produk)
+                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow">
+                           <img 
+                              src="{{ asset('uploads/' . $produk->foto_produk) }}" 
+                              alt="{{ $produk->nama_produk }}" 
+                              class="w-full h-60 object-cover mb-4 rounded-lg">
+                           <h3 class="text-xl font-bold mb-2">{{ $produk->nama_produk }}</h3>
+                           <p class="mb-4 text-gray-600">{{ $produk->deskripsi_produk }}</p>
+                           <p>Total Terjual: {{ $produk->total_terjual }}</p>
+                           <p class="text-xl font-bold mb-4 text-blue-600">Rp {{ number_format($produk->harga, 2, ',', '.') }}</p>
+                        </div>
+                  @endforeach
+               </div>
+            @else
+               <p class="text-gray-500">Tidak ada produk yang ditemukan.</p>
+            @endif  
    </div>
 </section>
+
 
   <!-- Subscribe Section -->
   <!-- <section class="bg-gray-900 text-white py-12">

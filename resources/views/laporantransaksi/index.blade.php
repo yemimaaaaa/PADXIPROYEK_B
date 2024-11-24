@@ -34,6 +34,9 @@
                     </h5>
                     <!-- Tombol Eksport -->
                     <div class="d-flex gap-2">
+                        <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-info btn-sm">
+                            <i class="bi bi-bar-chart"></i> Grafik Penjualan
+                        </a>
                         <a href="{{ route('laporantransaksi.export.pdf') }}" class="btn btn-danger btn-sm">
                             <i class="bi bi-file-earmark-pdf"></i> Export PDF
                         </a>

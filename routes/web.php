@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CekMemberController;
 use App\Http\Controllers\PublicMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
@@ -17,7 +18,7 @@ use App\Http\Controllers\SearchController;
 Route::get('/member/search', [SearchController::class, 'search'])->name('member.search');
 
 
-Route::get('/', [LandingPageController::class, 'index'])->name('landingpage');
+Route::get('/', [LandingPageController::class, 'showLandingPage'])->name('landingpage');
 
 
 /*
@@ -83,6 +84,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/member/{id}', [MemberController::class, 'update'])->name('member.update');
     // Rute untuk menghapus member
     Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
+    Route::get('/member/search', [CekMemberController::class, 'index'])->name('member.search');
     //Route::get('/cek-member', [MemberController::class, 'searchProfile'])->name('member.cekmember');
 
 
@@ -133,6 +135,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/laporantransaksi/{kode_transaksi}/cetak', [LaporanTransaksiController::class, 'detail'])->name('laporantransaksi.cetak');
     Route::get('/laporantransaksi/export/excel', [LaporanTransaksiController::class, 'exportExcel'])->name('laporantransaksi.export.excel');
     Route::get('/laporantransaksi/export/pdf', [LaporanTransaksiController::class, 'exportPdf'])->name('laporantransaksi.export.pdf');
+    Route::get('/laporantransaksi/grafik', [LaporanTransaksiController::class, 'grafik'])->name('laporantransaksi.grafik');
 
 
     // Poin routes
