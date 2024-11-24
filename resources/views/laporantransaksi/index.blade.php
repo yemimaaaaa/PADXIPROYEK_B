@@ -81,8 +81,8 @@
                                 <th>Kode Transaksi</th>
                                 <th>Nama Member</th>
                                 <th>Total</th>
-                                <th>Tanggal Transaksi</th>
-                                <th>Metode Pembayaran</th>
+                                <th>Tanggal Penjualan</th>
+                                <th>Payment Method</th>
                                 <th>Pegawai</th>
                                 <th>Aksi</th>
                             </tr>
@@ -101,7 +101,7 @@
                                     <td class="text-center">
                                         <!-- Detail Button -->
                                         <a href="{{ route('laporantransaksi.detail', $transaksi->kode_transaksi) }}" class="btn btn-warning btn-sm shadow-sm">
-                                            <i class="bi bi-info-circle"></i> Detail
+                                            <i class="bi bi-info-circle"></i> Detail Transaksi
                                         </a>
 
                                         <!-- Cetak Nota Button -->

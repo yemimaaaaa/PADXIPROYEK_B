@@ -43,6 +43,31 @@
             </div>
         </div>
 
+        <!-- Filter berdasarkan bulan -->
+        {{-- <div class="col-md-6">
+            <form class="row g-2 align-items-center" action="/transaksipenjualan/filter" method="GET">
+                <div class="col-6">
+                    <label for="bulan" class="form-label visually-hidden">Pilih Bulan</label>
+                    <select class="form-select" id="bulan" name="bulan">
+                        <option value="" disabled selected>Pilih Bulan</option>
+                        @for ($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}" {{ request('bulan') == $i ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label for="tahun" class="form-label visually-hidden">Masukkan Tahun</label>
+                    <input type="number" class="form-control" id="tahun" name="tahun" placeholder="Tahun" value="{{ request('tahun', now()->year) }}">
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary w-100" type="submit">Filter</button>
+                </div>
+            </form>
+        </div> --}}
+        
+
        <!-- Transaksi Table -->
 <table class="table table-bordered table-striped shadow-sm bg-white">
     <thead class="table-primary">

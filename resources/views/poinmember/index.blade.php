@@ -112,8 +112,7 @@
             <input type="text" name="query" class="form-control me-2" placeholder="Cari ID Member atau Nama..." value="{{ request('query') }}">
             <button type="submit" class="btn btn-primary">Cari</button>
         </form>
-
-       <!-- Card Grid -->
+      <!-- Card Grid -->
             <div class="row g-3">
                 @foreach ($members as $member)
                 <div class="col-md-4">
@@ -136,18 +135,15 @@
                                 $level = 'Bronze';
                             }
                         @endphp
-
                         <span class="badge {{ $badgeClass }}">{{ $level }}</span>
-                        {{-- <a href="{{ route('poinmember.detail', $member->id_member) }}" class="btn btn-primary mt-3 w-100">
+                        <a href="{{ route('poinmember.detail', $member->id_member) }}" class="btn btn-primary mt-3 w-100">
                             <i class="bi bi-info-circle"></i> Detail
-                        </a> --}}
+                        </a>
                     </div>
                 </div>
                 @endforeach
             </div>
-
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

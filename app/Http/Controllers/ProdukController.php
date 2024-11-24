@@ -133,4 +133,13 @@ public function destroy($id)
     // Redirect kembali ke halaman produk dengan pesan sukses
     return redirect('/produk')->with('success', 'Produk berhasil dihapus!');
 }
+
+public function showLandingPage()
+    {
+        // Mengambil semua produk untuk landing page
+        $products = Produk::all();
+
+        // Mengembalikan data produk ke view landingpage
+        return view('landingpage', compact('products'));
+    }   
 }

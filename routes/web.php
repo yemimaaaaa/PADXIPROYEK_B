@@ -141,6 +141,6 @@ Route::middleware('auth')->group(function () {
     // Poin routes
     Route::get('/poinmember', [PoinMemberController::class, 'index'])->name('poinmember.index');
     Route::post('/poinmember/search', [PoinMemberController::class, 'search'])->name('poinmember.search');
-    Route::get('/poinmember/{id_member}/detail', [PoinMemberController::class, 'detail'])->name('poinmember.detail');
+    Route::get('/poinmember/{id_member}', [PoinMemberController::class, 'showDetail'])->name('poinmember.detail');
 
 });

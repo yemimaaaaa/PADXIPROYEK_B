@@ -159,32 +159,34 @@
 <section class="bg-white py-12">
    <div class="container mx-auto text-center">
        <h2 class="text-4xl font-bold mb-8">Top 10 Best-Selling Products</h2>
-               @if(session('error'))
-               <div class="bg-red-500 text-white p-4 rounded mb-4">
-                  {{ session('error') }}
-               </div>
-            @endif
-            
-            @if(!empty($produks) && count($produks) > 0)
-               <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  @foreach($produks as $produk)
-                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow">
-                           <img 
-                              src="{{ asset('uploads/' . $produk->foto_produk) }}" 
-                              alt="{{ $produk->nama_produk }}" 
-                              class="w-full h-60 object-cover mb-4 rounded-lg">
-                           <h3 class="text-xl font-bold mb-2">{{ $produk->nama_produk }}</h3>
-                           <p class="mb-4 text-gray-600">{{ $produk->deskripsi_produk }}</p>
-                           <p>Total Terjual: {{ $produk->total_terjual }}</p>
-                           <p class="text-xl font-bold mb-4 text-blue-600">Rp {{ number_format($produk->harga, 2, ',', '.') }}</p>
-                        </div>
-                  @endforeach
-               </div>
-            @else
-               <p class="text-gray-500">Tidak ada produk yang ditemukan.</p>
-            @endif  
+
+       @if(session('error'))
+           <div class="bg-red-500 text-white p-4 rounded mb-4">
+               {{ session('error') }}
+           </div>
+       @endif
+
+       @if(!empty($produks) && count($produks) > 0)
+           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+               @foreach($produks as $produk)
+                   <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow">
+                       <img 
+                           src="{{ asset('uploads/' . $produk->foto_produk) }}" 
+                           alt="{{ $produk->nama_produk }}" 
+                           class="w-full h-60 object-cover mb-4 rounded-lg">
+                       <h3 class="text-xl font-bold mb-2">{{ $produk->nama_produk }}</h3>
+                       <p class="mb-4 text-gray-600">{{ $produk->deskripsi_produk }}</p>
+                       <p>Total Terjual: {{ $produk->total_terjual }}</p>
+                       <p class="text-xl font-bold mb-4 text-blue-600">Rp {{ number_format($produk->harga, 2, ',', '.') }}</p>
+                   </div>
+               @endforeach
+           </div>
+       @else
+           <p class="text-gray-500">Tidak ada produk yang ditemukan.</p>
+       @endif
    </div>
 </section>
+
 
 
   <!-- Subscribe Section -->
