@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Produk; // Mengimpor model Produk
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 class ProdukController extends Controller
@@ -135,11 +137,19 @@ public function destroy($id)
 }
 
 public function showLandingPage()
-    {
-        // Mengambil semua produk untuk landing page
-        $products = Produk::all();
+{
+    try {
+        $produks = DB::table('produk')->get();
 
-        // Mengembalikan data produk ke view landingpage
-        return view('landingpage', compact('products'));
-    }   
+        Log::info('Semua produk:', ['produks' => $produks->toArray()]);
+
+        return view('landingpage', compact('produks'));
+    } catch (\Exception $e) {
+        Log::error('Kesalahan:', ['message' => $e->getMessage()]);
+        return view('landingpage', ['produks' => []])
+            ->with('error', 'Terjadi kesalahan saat memuat data produk.');
+    }
+}
+
+
 }

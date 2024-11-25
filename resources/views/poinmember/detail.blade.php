@@ -3,12 +3,12 @@
 @section('content')
 <div class="container mt-4">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    {{-- <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="text-dark fw-bold">Detail Poin Member</h4>
         <a href="{{ route('poinmember.index') }}" class="btn btn-secondary d-flex align-items-center">
             <i class="fas fa-arrow-left me-2"></i> Kembali
         </a>
-    </div>
+    </div> --}}
 
     <!-- Informasi Member -->
     <div class="card mb-4 shadow border-0 rounded-4">

@@ -32,9 +32,9 @@ Route::get('/', [LandingPageController::class, 'showLandingPage'])->name('landin
 */
 
 // Route for landing page
-Route::get('/', function () {
-    return view('landingpage');
-});
+// Route::get('/', function () {
+//     return view('landingpage');
+// });
 
 // Public member routes
 // Route::get('/member-list', [MemberController::class, 'showAllMembers'])->name('member.list');
