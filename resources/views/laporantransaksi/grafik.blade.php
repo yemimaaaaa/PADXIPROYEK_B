@@ -32,7 +32,6 @@
                         @endforeach
                     </select>
                 </div>
-
                 <!-- Filter Level Member -->
                 <div class="col-md-3">
                     <label for="level_member" class="form-label text-secondary fw-semibold">
@@ -45,7 +44,6 @@
                         <option value="Bronze" {{ request('level_member') == 'Bronze' ? 'selected' : '' }}>Bronze</option>
                     </select>
                 </div>
-
                 <!-- Filter Tanggal Mulai -->
                 <div class="col-md-3">
                     <label for="start_date" class="form-label text-secondary fw-semibold">
@@ -53,7 +51,6 @@
                     </label>
                     <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
                 </div>
-
                 <!-- Filter Tanggal Selesai -->
                 <div class="col-md-3">
                     <label for="end_date" class="form-label text-secondary fw-semibold">
@@ -62,30 +59,39 @@
                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                 </div>
             </div>
-
             <div class="row mt-4">
                 <!-- Filter Bulan -->
                 <div class="col-md-3">
-                    <label for="month" class="form-label text-secondary fw-semibold">
+                    {{-- <label for="month" class="form-label text-secondary fw-semibold">
                         <i class="bi bi-calendar-month-fill"></i> Bulan
                     </label>
                     <select name="month" id="month" class="form-select">
                         @foreach(range(1, 12) as $month)
-                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" 
-                                {{ request('month', $selectedMonth) == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ request('month', $selectedMonth) == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
                                 {{ DateTime::createFromFormat('!m', $month)->format('F') }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
+                <!-- Filter Produk -->
+                {{-- <div class="col-md-3">
+                    <label for="id_produk" class="form-label text-secondary fw-semibold">
+                        <i class="bi bi-box-seam"></i> Produk
+                    </label>
+                    <select name="id_produk" id="id_produk" class="form-select">
+                        <option value="">Semua Produk</option>
+                        @foreach($products as $product)
+                            <option value="{{ $product->id_produk }}" {{ request('id_produk') == $product->id_produk ? 'selected' : '' }}>
+                                {{ $product->nama_produk }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div> --}}
             </div>
-
             <div class="mt-4 d-flex gap-3">
-                <!-- Submit Button -->
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-search"></i> Terapkan Filter
                 </button>
-                <!-- Reset Button -->
                 <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-counterclockwise"></i> Reset
                 </a>
@@ -127,8 +133,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Line Chart
         const ctxLine = document.getElementById('salesChart').getContext('2d');
-        const labels = {!! json_encode($labels) !!}; // Label tanggal
-        const data = {!! json_encode($data) !!}; // Data total penjualan
+        const labels = {!! json_encode($labels) !!};
+        const data = {!! json_encode($data) !!};
 
         new Chart(ctxLine, {
             type: 'line',
@@ -160,8 +166,8 @@
 
         // Pie Chart
         const ctxPie = document.getElementById('pieChart').getContext('2d');
-        const pieLabels = {!! json_encode($pieLabels) !!}; // Nama produk
-        const pieValues = {!! json_encode($pieValues) !!}; // Jumlah terjual
+        const pieLabels = {!! json_encode($pieLabels) !!};
+        const pieValues = {!! json_encode($pieValues) !!};
 
         new Chart(ctxPie, {
             type: 'pie',
