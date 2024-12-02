@@ -44,7 +44,31 @@
                         <option value="Bronze" {{ request('level_member') == 'Bronze' ? 'selected' : '' }}>Bronze</option>
                     </select>
                 </div>
-                <!-- Filter Tanggal Mulai -->
+
+                 <!-- Filter Bulan -->
+                 <div class="col-md-3">
+                    <label for="month" class="form-label text-secondary fw-semibold">
+                        <i class="bi bi-calendar-month-fill"></i> Bulan
+                    </label>
+                    <select name="month" id="month" class="form-select">
+                        @foreach(range(1, 12) as $month)
+                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ request('month', $selectedMonth) == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                {{ DateTime::createFromFormat('!m', $month)->format('F') }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-4 d-flex gap-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Terapkan Filter
+                    </button>
+                    <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </a>
+                </div>
+                
+                {{-- <!-- Filter Tanggal Mulai -->
                 <div class="col-md-3">
                     <label for="start_date" class="form-label text-secondary fw-semibold">
                         <i class="bi bi-calendar2-plus"></i> Tanggal Mulai
@@ -57,44 +81,7 @@
                         <i class="bi bi-calendar2-check"></i> Tanggal Selesai
                     </label>
                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
-                </div>
-            </div>
-            <div class="row mt-4">
-                <!-- Filter Bulan -->
-                <div class="col-md-3">
-                    {{-- <label for="month" class="form-label text-secondary fw-semibold">
-                        <i class="bi bi-calendar-month-fill"></i> Bulan
-                    </label>
-                    <select name="month" id="month" class="form-select">
-                        @foreach(range(1, 12) as $month)
-                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ request('month', $selectedMonth) == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
-                                {{ DateTime::createFromFormat('!m', $month)->format('F') }}
-                            </option>
-                        @endforeach
-                    </select> --}}
-                </div>
-                <!-- Filter Produk -->
-                {{-- <div class="col-md-3">
-                    <label for="id_produk" class="form-label text-secondary fw-semibold">
-                        <i class="bi bi-box-seam"></i> Produk
-                    </label>
-                    <select name="id_produk" id="id_produk" class="form-select">
-                        <option value="">Semua Produk</option>
-                        @foreach($products as $product)
-                            <option value="{{ $product->id_produk }}" {{ request('id_produk') == $product->id_produk ? 'selected' : '' }}>
-                                {{ $product->nama_produk }}
-                            </option>
-                        @endforeach
-                    </select>
                 </div> --}}
-            </div>
-            <div class="mt-4 d-flex gap-3">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Terapkan Filter
-                </button>
-                <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-counterclockwise"></i> Reset
-                </a>
             </div>
         </form>
     </div>

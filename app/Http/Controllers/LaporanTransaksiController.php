@@ -19,63 +19,108 @@ class LaporanTransaksiController extends Controller
     
     public function index(Request $request)
     {
-        // Filter berdasarkan query, tanggal mulai, dan akhir
-        $query = $request->input('query');
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-    
-        // Jika tidak ada tanggal yang dipilih, defaultkan ke tanggal 1 dan tanggal akhir bulan ini
-        $startDate = $startDate ?: Carbon::now()->startOfMonth()->toDateString();
-        $endDate = $endDate ?: Carbon::now()->endOfMonth()->toDateString();
-    
-        // Ambil data dengan pagination
-        $laporantransaksis = TransaksiPenjualan::with(['member', 'pegawai', 'detailtransaksi.produk'])
-            ->when($query, function ($queryBuilder) use ($query) {
-                $queryBuilder->where('kode_transaksi', 'like', "%$query%")
-                             ->orWhereHas('member', function ($subQuery) use ($query) {
-                                 $subQuery->where('nama', 'like', "%$query%");
-                             });
+        // Ambil input query dan tanggal
+        $searchQuery = $request->input('query');
+        $start_date = $request->input('start_date') ?: \Carbon\Carbon::now()->startOfMonth()->toDateString();
+        $end_date = $request->input('end_date') ?: \Carbon\Carbon::now()->endOfMonth()->toDateString();
+        
+        // Mengambil data transaksi dengan filter berdasarkan query dan rentang tanggal
+        $laporantransaksis = TransaksiPenjualan::with(['member', 'pegawai']) // Pastikan relasi sudah didefinisikan di model TransaksiPenjualan
+            ->when($searchQuery, function ($query) use ($searchQuery) { // Menggunakan $searchQuery untuk menghindari konflik
+                return $query->whereHas('member', function ($query) use ($searchQuery) { // Filter berdasarkan member
+                    $query->where('nama', 'like', '%'.$searchQuery.'%');
+                })
+                ->orWhere('kode_transaksi', 'like', '%'.$searchQuery.'%');
             })
-            ->when($startDate && $endDate, function ($queryBuilder) use ($startDate, $endDate) {
-                $queryBuilder->whereBetween('tanggal_penjualan', [$startDate, $endDate]);
-            })
-            ->orderBy('tanggal_penjualan', 'desc')
+            ->whereBetween('tanggal_penjualan', [$start_date, $end_date]) // Filter berdasarkan rentang tanggal
             ->paginate(10);
+        
+        // Menghitung total penjualan sesuai dengan filter yang diterapkan
+        $totalPenjualan = TransaksiPenjualan::when($searchQuery, function ($query) use ($searchQuery) { // Menggunakan $searchQuery untuk menghindari konflik
+            return $query->where('kode_transaksi', 'like', '%'.$searchQuery.'%')
+                         ->orWhereHas('member', function ($query) use ($searchQuery) {
+                             $query->where('nama', 'like', '%'.$searchQuery.'%');
+                         });
+        })
+        ->whereBetween('tanggal_penjualan', [$start_date, $end_date]) // Filter berdasarkan rentang tanggal
+        ->sum('total'); // Jumlahkan kolom 'total' untuk mendapatkan total penjualan
+        
+        return view('laporantransaksi.index', compact('laporantransaksis', 'totalPenjualan'));
+    }
     
-        // Hitung total penjualan untuk semua data (bukan hanya data yang dipaginate)
-        $totalPenjualan = TransaksiPenjualan::when($query, function ($queryBuilder) use ($query) {
-                $queryBuilder->where('kode_transaksi', 'like', "%$query%")
-                             ->orWhereHas('member', function ($subQuery) use ($query) {
-                                 $subQuery->where('nama', 'like', "%$query%");
-                             });
-            })
-            ->when($startDate && $endDate, function ($queryBuilder) use ($startDate, $endDate) {
-                $queryBuilder->whereBetween('tanggal_penjualan', [$startDate, $endDate]);
-            })
-            ->sum('total');
     
-        return view('laporantransaksi.index', compact('laporantransaksis', 'query', 'startDate', 'endDate', 'totalPenjualan'));
+
+    public function exportPdf(Request $request)
+    {
+        // Ambil parameter dari request (termasuk query, start_date, end_date)
+        $query = $request->query('query');
+        $start_date = $request->query('start_date');
+        $end_date = $request->query('end_date');
+    
+        // Membuat query untuk mengambil data transaksi berdasarkan filter
+        $laporantransaksisQuery = TransaksiPenjualan::query()
+            ->when($query, function ($queryBuilder) use ($query) {
+                return $queryBuilder->where('kode_transaksi', 'like', "%{$query}%")
+                    ->orWhereHas('member', function ($q) use ($query) {
+                        $q->where('nama', 'like', "%{$query}%"); // Filter nama member
+                    });
+            })
+            ->when($start_date, function ($queryBuilder) use ($start_date) {
+                return $queryBuilder->whereDate('tanggal_penjualan', '>=', $start_date);
+            })
+            ->when($end_date, function ($queryBuilder) use ($end_date) {
+                return $queryBuilder->whereDate('tanggal_penjualan', '<=', $end_date);
+            });
+    
+        // Ambil data transaksi untuk PDF
+        $laporantransaksis = $laporantransaksisQuery->get();
+    
+        // Export to PDF (misalnya menggunakan domPDF atau library lainnya)
+        $pdf = PDF::loadView('laporantransaksi\pdf', compact('laporantransaksis'));
+        return $pdf->download('laporan_transaksi.pdf');
     }
     
     
     public function exportExcel(Request $request)
-    {
-        // Ambil data yang difilter
-        $laporantransaksis = $this->getFilteredData($request);
-    
-        // Export ke Excel
-        return Excel::download(new TransaksiExport($laporantransaksis), 'laporan-transaksi.xlsx');
-    }
-    
+{
+    // Ambil parameter dari request (termasuk query, start_date, end_date)
+    $query = $request->query('query');
+    $start_date = $request->query('start_date');
+    $end_date = $request->query('end_date');
 
+    // Membuat query untuk mengambil data transaksi berdasarkan filter
+    $laporantransaksisQuery = TransaksiPenjualan::query()
+        ->when($query, function ($queryBuilder) use ($query) {
+            return $queryBuilder->where('kode_transaksi', 'like', "%{$query}%")
+                ->orWhereHas('member', function ($q) use ($query) {
+                    $q->where('nama', 'like', "%{$query}%"); // Filter nama member
+                });
+        })
+        ->when($start_date, function ($queryBuilder) use ($start_date) {
+            return $queryBuilder->whereDate('tanggal_penjualan', '>=', $start_date);
+        })
+        ->when($end_date, function ($queryBuilder) use ($end_date) {
+            return $queryBuilder->whereDate('tanggal_penjualan', '<=', $end_date);
+        });
+
+    // Ambil data transaksi untuk Excel
+    $laporantransaksis = $laporantransaksisQuery->get();
+
+    // Export to Excel (misalnya menggunakan Maatwebsite Excel)
+    return Excel::download(new TransaksiExport($laporantransaksis), 'laporan_transaksi.xlsx');
+} 
+    
+    
     // Fungsi Helper: Ambil Data dengan Filter
     private function getFilteredData(Request $request)
 {
-    $query = $request->input('query');  // Kata kunci pencarian
-    $startDate = $request->input('start_date') ?: Carbon::now()->startOfMonth()->toDateString();  // Tanggal mulai
-    $endDate = $request->input('end_date') ?: Carbon::now()->endOfMonth()->toDateString();  // Tanggal selesai
-
-    // Ambil data TransaksiPenjualan dengan relasi yang dibutuhkan
+    $query = $request->input('query');
+    $startDate = $request->input('start_date') ?: Carbon::now()->startOfMonth()->toDateString(); 
+    $endDate = $request->input('end_date') ?: Carbon::now()->endOfMonth()->toDateString();
+    
+    $startDate = Carbon::parse($startDate)->timezone('Asia/Jakarta')->startOfDay(); 
+    $endDate = Carbon::parse($endDate)->timezone('Asia/Jakarta')->endOfDay();
+    
     return TransaksiPenjualan::with(['pegawai', 'member', 'detailtransaksi.produk'])
         ->when($query, function ($queryBuilder) use ($query) {
             $queryBuilder->where('kode_transaksi', 'like', "%$query%")
@@ -83,11 +128,11 @@ class LaporanTransaksiController extends Controller
                              $subQuery->where('nama', 'like', "%$query%");
                          });
         })
-        ->whereBetween('tanggal_penjualan', [$startDate, $endDate])  // Filter berdasarkan tanggal
+        ->whereBetween('tanggal_penjualan', [$startDate, $endDate])
         ->orderBy('tanggal_penjualan', 'desc')
         ->get();
 }
-      
+
         public function detail($kode_transaksi)
         {
             // Ambil data transaksi dengan relasi member dan levelmember
@@ -174,15 +219,19 @@ class LaporanTransaksiController extends Controller
         
             // Filter Tanggal
             if ($request->input('start_date') && $request->input('end_date')) {
-                $query->whereBetween('tanggal_penjualan', [
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                ]);
+                $startDate = $request->input('start_date');
+                $endDate = $request->input('end_date');
+                $query->whereBetween('tanggal_penjualan', [$startDate, $endDate]);
             }
         
-            // Filter Bulan
-            $selectedMonth = $request->input('month') ?? date('m');
-            $query->whereMonth('tanggal_penjualan', $selectedMonth);
+            // Filter Bulan (gunakan whereMonth dan whereYear untuk memastikan bulan dan tahun yang benar)
+            $selectedMonth = $request->input('month') ?? date('m'); // Default ke bulan saat ini jika tidak ada input bulan
+            $selectedYear = $request->input('year') ?? date('Y'); // Menambahkan input tahun, default ke tahun saat ini
+            Log::info('Selected Month and Year:', ['month' => $selectedMonth, 'year' => $selectedYear]);
+        
+            // Gunakan whereYear dan whereMonth untuk memfilter berdasarkan bulan dan tahun yang tepat
+            $query->whereYear('tanggal_penjualan', '=', $selectedYear)
+                  ->whereMonth('tanggal_penjualan', '=', $selectedMonth);
         
             // Filter Produk
             if ($request->input('id_produk')) {
@@ -202,39 +251,30 @@ class LaporanTransaksiController extends Controller
         
             // Data untuk pie chart (penjualan produk)
             $pieQuery = DetailTransaksi::join('produk', 'detailtransaksi.id_produk', '=', 'produk.id_produk')
-            ->join('transaksipenjualan', 'detailtransaksi.kode_transaksi', '=', 'transaksipenjualan.kode_transaksi')
-            ->selectRaw('produk.nama_produk as nama_produk, SUM(detailtransaksi.jumlah) as jumlah_terjual')
-            ->when($request->input('member_id'), function ($q) use ($request) {
-                $q->where('transaksipenjualan.id_member', $request->input('member_id'));
-            })
-            ->when($request->input('level_member'), function ($q) use ($request) {
-                $q->whereHas('transaksi.member.levelmember', function ($q2) use ($request) {
-                    $q2->where('tingkatan_level', $request->input('level_member'));
-                });
-            })
-            ->when($request->input('start_date') && $request->input('end_date'), function ($q) use ($request) {
-                $q->whereBetween('transaksipenjualan.tanggal_penjualan', [
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                ]);
-            })
-            ->whereMonth('transaksipenjualan.tanggal_penjualan', $selectedMonth);
+                ->join('transaksipenjualan', 'detailtransaksi.kode_transaksi', '=', 'transaksipenjualan.kode_transaksi')
+                ->selectRaw('produk.nama_produk as nama_produk, SUM(detailtransaksi.jumlah) as jumlah_terjual')
+                ->when($request->input('member_id'), function ($q) use ($request) {
+                    $q->where('transaksipenjualan.id_member', $request->input('member_id'));
+                })
+                ->when($request->input('level_member'), function ($q) use ($request) {
+                    $q->whereHas('transaksi.member.levelmember', function ($q2) use ($request) {
+                        $q2->where('tingkatan_level', $request->input('level_member'));
+                    });
+                })
+                ->when($request->input('start_date') && $request->input('end_date'), function ($q) use ($request) {
+                    $q->whereBetween('transaksipenjualan.tanggal_penjualan', [
+                        $request->input('start_date'),
+                        $request->input('end_date'),
+                    ]);
+                })
+                ->whereYear('transaksipenjualan.tanggal_penjualan', '=', $selectedYear) // Filter berdasarkan tahun
+                ->whereMonth('transaksipenjualan.tanggal_penjualan', '=', $selectedMonth); // Filter berdasarkan bulan
         
-            // Tambahkan filter produk jika ada
+            // Filter produk jika ada
             if ($request->input('id_produk')) {
                 $pieQuery->where('produk.id_produk', $request->input('id_produk'));
             }
         
-            // Tambahkan filter tanggal jika ada
-            if ($request->input('start_date') && $request->input('end_date')) {
-                $pieQuery->whereBetween('transaksipenjualan.tanggal_penjualan', [
-                    $request->input('start_date'),
-                    $request->input('end_date'),
-                ]);
-            }
-        
-            $pieQuery->whereMonth('transaksipenjualan.tanggal_penjualan', $selectedMonth);
-
             $pieData = $pieQuery->groupBy('produk.nama_produk')
                 ->orderBy('jumlah_terjual', 'desc')
                 ->get();
@@ -253,7 +293,7 @@ class LaporanTransaksiController extends Controller
             $members = \App\Models\Member::all();
             $products = \App\Models\Produk::all();
         
-            return view('laporantransaksi.grafik', compact('labels', 'data', 'pieLabels', 'pieValues', 'members', 'products', 'selectedMonth'));
-        }        
-        
+            return view('laporantransaksi.grafik', compact('labels', 'data', 'pieLabels', 'pieValues', 'members', 'products', 'selectedMonth', 'selectedYear'));
+        }
+         
 }

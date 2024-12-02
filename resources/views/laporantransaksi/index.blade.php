@@ -25,60 +25,60 @@
         </div>
 
         <!-- Total Penjualan -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <h5 class="card-title text-dark mb-0"><strong>Total Penjualan: </strong>Rp{{ number_format($totalPenjualan, 0, ',', '.') }}</h5>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-info btn-sm">
-                        <i class="bi bi-bar-chart"></i> Grafik Penjualan
-                    </a>
-                    <a href="{{ route('laporantransaksi.export.pdf') }}" class="btn btn-danger btn-sm">
-                        <i class="bi bi-file-earmark-pdf"></i> Ecport PDF
-                    </a>
-                    <a href="{{ route('laporantransaksi.export.excel') }}" class="btn btn-success btn-sm">
-                        <i class="bi bi-file-earmark-excel"></i> Export Excel
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search Filter -->
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4" style="background-color: #f8f9fa;">
             <div class="card-body">
-                <h5 class="card-title mb-3 text-primary">Filter Pencarian</h5>
-                <div class="row">
-                    <!-- Tanggal Mulai -->
-                    <div class="col-md-4 mb-3">
-                        <label for="start_date" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="start_date" value="{{ request('start_date') ?? \Carbon\Carbon::now()->startOfMonth()->toDateString() }}">
-                    </div>
-
-                    <!-- Tanggal Selesai -->
-                    <div class="col-md-4 mb-3">
-                        <label for="end_date" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="end_date" value="{{ request('end_date') ?? \Carbon\Carbon::now()->endOfMonth()->toDateString() }}">
-                    </div>
-
-                    <!-- Pencarian Kode Transaksi / Nama Member -->
-                    <div class="col-md-4 mb-3">
-                        <label for="query" class="form-label">Cari Kode / Nama Member</label>
-                        <input type="text" id="query" class="form-control" value="{{ request('query') }}" placeholder="Search laporan transaksi..">
-                    </div>
-                </div>
-
-                <!-- Tombol Pencarian -->
-                <div class="d-flex justify-content-end">
-                    <button type="button" id="searchButton" class="btn btn-primary">Search</button>
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0" style="color: #212529;">
+                        <strong>Total Penjualan:</strong> 
+                        <span>Rp{{ number_format($totalPenjualan, 0, ',', '.') }}</span>
+                    </h5>
+                    <!-- Tombol Eksport -->
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('laporantransaksi.grafik') }}" class="btn btn-info btn-sm">
+                                <i class="bi bi-bar-chart"></i> Grafik Penjualan
+                            </a>
+                            <!-- Ekspor PDF dengan query parameter tambahan -->
+                            <a href="{{ route('laporantransaksi.export.pdf', [
+                                'query' => request('query'),
+                                'start_date' => request('start_date'), 
+                                'end_date' => request('end_date')
+                            ]) }}" class="btn btn-danger btn-sm">
+                                <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                            </a>
+                            <!-- Ekspor Excel dengan query parameter tambahan -->
+                            <a href="{{ route('laporantransaksi.export.excel', [
+                                'query' => request('query'),
+                                'start_date' => request('start_date'), 
+                                'end_date' => request('end_date')
+                            ]) }}" class="btn btn-success btn-sm">
+                                <i class="bi bi-file-earmark-excel"></i> Export Excel
+                            </a>
+                        </div>
                 </div>
             </div>
         </div>
 
-        <!-- Data Transaksi -->
-        <div class="card shadow-sm">
+        <!-- Search Bar -->
+        <div class="row align-items-center mb-3">
+            <div class="col-md-12">
+                <!-- Gabungkan filter pencarian dan tanggal dalam satu form -->
+                <form class="d-flex gap-2" action="/laporantransaksi" method="GET">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search Laporan Transaksi" value="{{ request('query') }}">
+                    <input type="date" class="form-control" name="start_date" placeholder="Tanggal Mulai" value="{{ request('start_date') ?: \Carbon\Carbon::now()->startOfMonth()->toDateString() }}">
+                    <input type="date" class="form-control" name="end_date" placeholder="Tanggal Selesai" value="{{ request('end_date') ?: \Carbon\Carbon::now()->endOfMonth()->toDateString() }}">
+                    <button class="btn btn-primary" type="submit">
+                        Filter
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabel Data Transaksi -->
+        <div class="card shadow-sm mb-5">
             <div class="card-body">
                 <h5 class="card-title text-primary mb-4">Data Transaksi</h5>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered bg-white">
                         <thead class="table-primary">
                             <tr>
                                 <th>No</th>
@@ -101,19 +101,20 @@
                                     <td>{{ $transaksi->tanggal_penjualan }}</td>
                                     <td>{{ $transaksi->payment_method ?? 'Tidak Diketahui' }}</td>
                                     <td>{{ $transaksi->pegawai->nama ?? 'Tidak Diketahui' }}</td>
+                                    
                                     <td class="text-center">
                                         <!-- Detail Button -->
-                                        <a href="{{ route('laporantransaksi.detail', $transaksi->kode_transaksi) }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('laporantransaksi.detail', $transaksi->kode_transaksi) }}" class="btn btn-warning btn-sm shadow-sm">
                                             <i class="bi bi-info-circle"></i> Detail Transaksi
                                         </a>
 
                                         <!-- Cetak Nota Button -->
-                                        <a href="{{ route('laporantransaksi.cetak', $transaksi->kode_transaksi) }}" class="btn btn-primary btn-sm mt-1">
-                                            <i class="bi bi-printer"></i> Cetak Nota Transaksi
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
+                                        <a href="{{ route('laporantransaksi.cetak', $transaksi->kode_transaksi) }}" class="btn btn-primary btn-sm shadow-sm mt-1">
+                                        <i class="bi bi-printer"></i> Cetak Nota Transaksi
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
                                 <tr>
                                     <td colspan="8" class="text-center text-muted">Tidak ada data transaksi.</td>
                                 </tr>
@@ -144,20 +145,5 @@
     </div>
     @endif
 </body>
-
-<script>
-    document.getElementById('searchButton').addEventListener('click', function() {
-        // Ambil nilai input dari field
-        var startDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
-        var query = document.getElementById('query').value;
-
-        // Buat URL pencarian dengan query string
-        var url = '{{ route('laporantransaksi.index') }}?start_date=' + startDate + '&end_date=' + endDate + '&query=' + query;
-
-        // Redirect ke URL pencarian
-        window.location.href = url;
-    });
-</script>
 
 @endsection
