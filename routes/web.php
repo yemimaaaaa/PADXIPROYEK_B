@@ -89,16 +89,16 @@ Route::middleware('auth')->group(function () {
 
 
     // Employee routes
-    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-    Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
-    Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
-    Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
-    // Rute untuk menampilkan halaman edit member
-    Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
-    // Rute untuk mengupdate member
-    Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
-    // Rute untuk menghapus member
-    Route::delete('/pegawai/{id}/delete', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
+    // Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    // Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
+    // Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
+    // Route::get('/pegawai/search', [PegawaiController::class, 'search'])->name('pegawai.search');
+    // // Rute untuk menampilkan halaman edit member
+    // Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    // // Rute untuk mengupdate member
+    // Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    // // Rute untuk menghapus member
+    // Route::delete('/pegawai/{id}/delete', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
 
     
     //stok
@@ -143,4 +143,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/poinmember/search', [PoinMemberController::class, 'search'])->name('poinmember.search');
     Route::get('/poinmember/{id_member}', [PoinMemberController::class, 'showDetail'])->name('poinmember.detail');
 
+});
+
+Route::middleware(['auth', 'role:owner'])->group(function () {
+    Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+    Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
+    Route::post('/pegawai/store', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::get('/pegawai/{id}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/{id}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{id}/delete', [PegawaiController::class, 'destroy'])->name('pegawai.delete');
 });

@@ -27,13 +27,13 @@ class RoleMiddleware
 
         if (Auth::check()) 
         {
-            if ('admin' == $role) {
+            if ('adminkasir' == $role) {
                 return $next($request);
             } 
         }
 
         abort(403);
-        $pegawai = session('pegawai');
+        $pegawai = session('user');
         $role = $pegawai->role->nama_role;
  
         $routes = [

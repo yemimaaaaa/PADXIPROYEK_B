@@ -165,7 +165,7 @@
                 <select id="id_role" name="id_role" required>
                     <option value="" disabled selected>Pilih Role</option>
                     <option value="10101" {{ old('id_role') == '10101' ? 'selected' : '' }}>Owner</option>
-                    <option value="10102" {{ old('id_role') == '10102' ? 'selected' : '' }}>Pegawai</option>
+                    <option value="10102" {{ old('id_role') == '10102' ? 'selected' : '' }}>AdminKasir</option>
                 </select>
                 @error('id_role')
                     <span class="error">{{ $message }}</span>

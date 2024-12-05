@@ -82,33 +82,33 @@ class LaporanTransaksiController extends Controller
     
     
     public function exportExcel(Request $request)
-{
-    // Ambil parameter dari request (termasuk query, start_date, end_date)
-    $query = $request->query('query');
-    $start_date = $request->query('start_date');
-    $end_date = $request->query('end_date');
-
-    // Membuat query untuk mengambil data transaksi berdasarkan filter
-    $laporantransaksisQuery = TransaksiPenjualan::query()
-        ->when($query, function ($queryBuilder) use ($query) {
-            return $queryBuilder->where('kode_transaksi', 'like', "%{$query}%")
-                ->orWhereHas('member', function ($q) use ($query) {
-                    $q->where('nama', 'like', "%{$query}%"); // Filter nama member
-                });
-        })
-        ->when($start_date, function ($queryBuilder) use ($start_date) {
-            return $queryBuilder->whereDate('tanggal_penjualan', '>=', $start_date);
-        })
-        ->when($end_date, function ($queryBuilder) use ($end_date) {
-            return $queryBuilder->whereDate('tanggal_penjualan', '<=', $end_date);
-        });
-
-    // Ambil data transaksi untuk Excel
-    $laporantransaksis = $laporantransaksisQuery->get();
-
-    // Export to Excel (misalnya menggunakan Maatwebsite Excel)
-    return Excel::download(new TransaksiExport($laporantransaksis), 'laporan_transaksi.xlsx');
-} 
+    {
+        // Ambil parameter dari request (termasuk query, start_date, end_date)
+        $query = $request->query('query');
+        $start_date = $request->query('start_date');
+        $end_date = $request->query('end_date');
+    
+        // Membuat query untuk mengambil data transaksi berdasarkan filter
+        $laporantransaksisQuery = TransaksiPenjualan::query()
+            ->when($query, function ($queryBuilder) use ($query) {
+                return $queryBuilder->where('kode_transaksi', 'like', "%{$query}%")
+                    ->orWhereHas('member', function ($q) use ($query) {
+                        $q->where('nama', 'like', "%{$query}%"); // Filter nama member
+                    });
+            })
+            ->when($start_date, function ($queryBuilder) use ($start_date) {
+                return $queryBuilder->whereDate('tanggal_penjualan', '>=', $start_date);
+            })
+            ->when($end_date, function ($queryBuilder) use ($end_date) {
+                return $queryBuilder->whereDate('tanggal_penjualan', '<=', $end_date);
+            });
+    
+        // Ambil data transaksi untuk Excel
+        $laporantransaksis = $laporantransaksisQuery->get();
+    
+        // Export to Excel menggunakan TransaksiExport
+        return Excel::download(new TransaksiExport($laporantransaksis), 'laporan_transaksi.xlsx');
+    }
     
     
     // Fungsi Helper: Ambil Data dengan Filter

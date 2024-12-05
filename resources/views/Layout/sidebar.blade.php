@@ -100,7 +100,7 @@
                                 <span class="ms-1 d-none d-sm-inline">Transaksi Penjualan</span>
                             </a>
                         </li>
-                        @if (Auth::user()->role->nama_role !== "pegawai")
+                        @if (Auth::check() && Auth::user()->role->nama_role === 'owner')
                         <li>
                             <a id="pegawai" href="{{ route('pegawai.index') }}" class="nav-link px-0 align-middle">
                                 <i class="bi bi-person-check"></i>
@@ -137,7 +137,6 @@
             </div>
         </div>
     </div>
-
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -154,7 +154,7 @@
                 <label for="id_role">Role:</label>
                 <select id="id_role" name="id_role" required>
                     <option value="10101" {{ old('id_role', $pegawai->id_role) == '10101' ? 'selected' : '' }}>Owner</option>
-                    <option value="10102" {{ old('id_role', $pegawai->id_role) == '10102' ? 'selected' : '' }}>Pegawai</option>
+                    <option value="10102" {{ old('id_role', $pegawai->id_role) == '10102' ? 'selected' : '' }}>AdminKasir</option>
                 </select>
             </div>
 
