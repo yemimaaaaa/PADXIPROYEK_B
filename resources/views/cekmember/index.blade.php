@@ -18,9 +18,6 @@
                 <h1 class="text-4xl font-extrabold mb-2 tracking-wider">Basado</h1>
                 <h2 class="text-xl font-light">Food & Drink</h2>
             </div>
-            {{-- <div class="mt-8 text-white text-sm">
-                <p>Powered by Your Company</p>
-            </div> --}}
         </div>
         <!-- Main Content -->
         <div class="w-3/4 p-8">

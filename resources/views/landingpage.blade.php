@@ -75,7 +75,7 @@
   <!-- Hero Section -->
   <section class="bg-gray-100 py-20">
    <div class="container mx-auto text-center">
-    <h1 class="text-5xl font-bold mb-4">
+    <h1 class="text-4xl font-bold mb-4">
      Good Coffee Will Always Find The Audience
     </h1>
     <p class="text-lg mb-8">
@@ -131,29 +131,33 @@
     </div>
    </div>
   </section>
-  <!-- Best Coffee House Section -->
-  <section class="bg-gray-100 py-12">
-   <div class="container mx-auto flex flex-col md:flex-row items-center">
-    <div class="md:w-1/2">
-     <img alt="Coffee Shop Image" class="rounded-lg shadow-lg" height="400" src="/basadoolandingpage.jpg" width="600"/>
+
+<!-- Experience the Magic of Basado Section -->
+<section class="bg-gray-100 py-12">
+    <div class="container mx-auto flex flex-col md:flex-row items-center">
+        <!-- Text Section -->
+        <div class="md:w-1/2 md:pr-8">
+            <h2 class="text-4xl font-bold text-gray-800 mb-6" style="font-family: 'Playfair Display', serif;">
+                Experience the Magic of Basado Food & Drink
+            </h2>
+            <p class="text-gray-600 text-lg mb-4">
+                Welcome to Basado, where food and drink become an art form. From the moment you step in, you’re greeted with a warm and inviting atmosphere designed to make you feel at home.
+            </p>
+            <p class="text-gray-600 text-lg mb-4">
+                Our carefully curated menu showcases a variety of dishes, each crafted with the freshest ingredients and a passion for culinary excellence. Whether it's a quick coffee, a hearty lunch, or an indulgent dessert, we have something for everyone.
+            </p>
+            <p class="text-gray-600 text-lg mb-6">
+                Let Basado be your daily escape. Come for the food, stay for the memories.
+            </p>
+        </div>
+        <!-- Image Section -->
+        <div class="md:w-1/2 mt-8 md:mt-0">
+            <img src="/basadoolandingpage.jpg" alt="Basado Experience" class="rounded-lg shadow-lg">
+        </div>
     </div>
-    <div class="md:w-1/2 md:ml-8 mt-8 md:mt-0">
-     <h2 class="text-3xl font-bold mb-4" style="font-family: 'Allerta', sans-serif;">
-      <!-- Best Coffee House In Your Home Town -->
-      Craving something new?
-      Pair your coffee with one of our signature dishes.
-     </h2>
-     <p class="mb-4">
-     Discover a unique dining experience at Basado Food and Drink. Enjoy our cozy atmosphere while savoring our carefully selected coffee and authentic dishes that will tantalize your taste buds..
-     </p>
-     <p class="mb-4">
-     Each dish is a perfect blend of high-quality ingredients and our chef's creative touch. Come and experience the culinary journey you'll never forget.
-     </p>
-     <!-- <a class="bg-orange-500 text-white py-3 px-6 rounded-full" href="#">
-      Read More
-     </a> -->
-    </div>
-   </div>
+</section>
+
+
 
 <!-- Top Products Section -->
 
@@ -188,8 +192,31 @@
         @endif
     </div>
 </section>
-3
 
+<!-- Best Coffee House Section -->
+<section class="bg-gray-100 py-12">
+    <div class="container mx-auto flex flex-col md:flex-row items-center">
+     <div class="md:w-1/2">
+      <img alt="Coffee Shop Image" class="rounded-lg shadow-lg" height="400" src="/basadolandingpage1.jpg" width="600"/>
+     </div>
+     <div class="md:w-1/2 md:ml-8 mt-8 md:mt-0">
+      <h2 class="text-3xl font-bold mb-4" style="font-family: 'Allerta', sans-serif;">
+       <!-- Best Coffee House In Your Home Town -->
+       Craving something new?
+       Pair your coffee with one of our signature dishes.
+      </h2>
+      <p class="mb-4">
+      Discover a unique dining experience at Basado Food and Drink. Enjoy our cozy atmosphere while savoring our carefully selected coffee and authentic dishes that will tantalize your taste buds..
+      </p>
+      <p class="mb-4">
+      Each dish is a perfect blend of high-quality ingredients and our chef's creative touch. Come and experience the culinary journey you'll never forget.
+      </p>
+      <!-- <a class="bg-orange-500 text-white py-3 px-6 rounded-full" href="#">
+       Read More
+      </a> -->
+     </div>
+    </div>
+</section>
   <!-- Subscribe Section -->
   <!-- <section class="bg-gray-900 text-white py-12">
    <div class="container mx-auto flex flex-col md:flex-row items-center">
