@@ -12,17 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('role', function (Blueprint $table) {
-            $table->increments('id_role');
-            $table->string('nama_role')->unique();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->increments('id_role'); // Primary key, unsignedInteger
+            $table->string('nama_role')->unique(); // Ensure unique role names
+            $table->timestamps(); // Adds created_at and updated_at columns
+            $table->softDeletes(); // Adds deleted_at column for soft deletes
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('role'); // Drops the role table if it exists
     }
 };

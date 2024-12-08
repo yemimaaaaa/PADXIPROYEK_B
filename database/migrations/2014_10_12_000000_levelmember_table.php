@@ -12,27 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('levelmember', function (Blueprint $table) {
-            $table->increments('id_level_member'); // Menggunakan string untuk nama kolom
+            $table->unsignedInteger('id_level_member')->autoIncrement(); // Match type with 'member' table
             $table->string('tingkatan_level');
-            $table->integer('poin_minimal'); // Poin yang diperlukan untuk mencapai level ini
-            $table->decimal('diskon', 5, 2)->nullable(); // Manfaat/hadiah yang diperoleh pada level ini
+            $table->integer('poin_minimal'); // Points required to reach this level
+            $table->decimal('diskon', 5, 2)->nullable(); // Discount for this level
             $table->timestamps();
         });
-
-        // Menambahkan data level member default (Bronze, Silver, Gold)
-        // DB::table('levelmember')->insert([
-        //     [
-        //         'tingkatan_level' => 'Bronze','poin_minimal' => 10,'diskon' => 0.05,
-        //     ],
-        //     [
-        //         'tingkatan_level' => 'Silver','poin_minimal' => 1001,'diskon' => 0.15,
-        //     ],
-        //     [
-        //         'tingkatan_level' => 'Gold','poin_minimal' => 2001,'diskon' => 0.30,
-        //     ]
-        // ]);
     }
-    
+
     /**
      * Reverse the migrations.
      */
